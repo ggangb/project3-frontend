@@ -81,7 +81,6 @@ export default {
 }
 .category_item .category_btn {
   display: block;
-    height: 100%;
     padding: 18px 10px 20px;
     font-size: 18px;
     line-height: 22px;
