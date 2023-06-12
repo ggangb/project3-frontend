@@ -23,17 +23,127 @@
   </div>
 </div>
 </div>
+<div class="home_sub">
+  <div class="home_community">
+    <div class="coummunity_post">
+      <div class="head">
+        <h2>최신글</h2>
+        <a class="more"><span>커뮤니티보기</span></a>
+      </div>
+     
+      <ul>
+        <li><a>커뮤니티 글</a></li>
+      </ul>
+    </div>
+  </div>
+<div class="league_table">
+  <div class="rank_table2">
+    <div class="head">
+      <h2>해외축구 순위표</h2>
+      <a class="more"><span>더보기></span></a>
+    </div>
+    <div class="table_tab">
+        <div class="inner">
+          <a>프리미어리그</a>
+          <a>세리에 A</a>
+          <a>라리가</a>
+          <a>분데스리가</a>
+          <a>리그앙</a>
+        </div>
+      </div>
+      <div class="table_content">
+        <table>
+          <thead>
+            <tr>
+              <th class="th_num"><span></span></th>
+              <th class="th_team"><span>팀명</span></th>
+              <th><span>경기</span></th>
+              <th><span>승</span></th>
+              <th><span>무</span></th>
+              <th><span>패</span></th>
+              <th><span>승점</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th><span>1</span></th>
+              <td>
+                <div class="wrap">
+                  <div class="image_flag">
+                    <img>
+                  </div>
+                  <div class="info">
+                    <span class="name">맨시티</span>
+                  </div>
+                </div>
+              </td>
+              <td><span>38</span></td>
+              <td><span>28</span></td>
+              <td><span>5</span></td>
+              <td><span>5</span></td>
+              <td><span>89</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  </div>
+  <div class="rank_table1">
+    <div class="home_rank1">
+      <div class="head">
+        <h2>해외축구 득점 순위</h2>
+        <a class="more"><span>더보기></span></a>
+      </div>
+      <div class="table_tab">
+        <div class="inner">
+          <a>프리미어리그</a>
+          <a>세리에 A</a>
+          <a>라리가</a>
+          <a>분데스리가</a>
+          <a>리그앙</a>
+        </div>
+      </div>
+      <div class="table_content">
+        <table>
+          <thead>
+            <tr>
+              <th class="th_num"><span></span></th>
+              <th class="th_team"><span>선수명</span></th>
+              <th><span>구단</span></th>
+              <th><span>골</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th><span>1</span></th>
+              <td>
+                <div class="wrap">
+                  <div class="info">
+                    <span class="name">홀란드</span>
+                  </div>
+                </div>
+              </td>
+              <td><span>맨시티</span></td>
+              <td><span>36골</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
   </div>
 </template>
 
 <script>
 
-const api_url = "http://localhost:3000/news"; //서버통신 url
+const api_url = "http://localhost:3000/news"; //네이버 뉴스 요청
+const table_url = "http://localhost:3000/table" //리그 테이블 요청
 const anywhere = "https://proxy.cors.sh/"; //네이버 뉴스 cors 에러
 const headers = {
-  'x-cors-api-key': 'temp_5974a9fff22b31e9b3916d06a9f5d686' //cors 설정
+  'x-cors-api-key': 'temp_5974a9fff22b31e9b3916d06a9f5d686' //cors 설정 헤더
 }
-const cheerio = require('cheerio'); // 크롤링에 사용/
+// const cheerio = require('cheerio'); // 크롤링에 사용/
 export default {
   name: 'HelloWorld',
   data() {
@@ -41,6 +151,7 @@ export default {
       post: [],
       request: [],
       newsData: [],
+      table: []
     }
   },
   methods: {
@@ -56,30 +167,42 @@ export default {
           this.request = this.newsData.map((res) => { //이미지를 가져오기 위해 axios로 요청을 보낼 뉴스url 배열을 생성
               return this.$axios.get(anywhere + res.link , {headers})
             })
-       this.$axios
-       .all(this.request) //만들어논 뉴스 url 배열로 요청보내기
-       .then(
-         this.$axios.spread((...response) => { //응답에서 meta og : image만 가져와서 이미지 url 삽입
-          for(var i in response) {
-            var $ = cheerio.load(response[i].data)
-             var result = $('meta[property=\'og:image\']').attr('content')
-             this.newsData[i].img = result
-          }
-       })
-       )
-       .catch((error) => {
-         console.log(error);
-       })
+      //  this.$axios
+      //  .all(this.request) //만들어 놓은 뉴스 url 배열로 요청보내기
+      //  .then(
+      //    this.$axios.spread((...response) => { //응답에서 meta og : image만 가져와서 이미지 url 삽입
+      //     for(var i in response) {
+      //       var $ = cheerio.load(response[i].data)
+      //        var result = $('meta[property=\'og:image\']').attr('content')
+      //        this.newsData[i].img = result
+      //     }
+      //  })
+      //  )
+      //  .catch((error) => {
+      //    console.log(error);
+      //  })
     
         })
         .catch((error) => {
           console.log(error);
         })
-    }   
+    },   
+    getTable() {
+      this.$axios
+        .get(table_url)
+        .then((res) => {
+          this.table = res.data;
+          console.log(this.table)
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    }
   }
   ,
   created(){
     this.getData();
+    this.getTable();
   }
 };
 </script>
@@ -123,8 +246,8 @@ export default {
  }
  .news_form {
     float: left;
-    width: 490px;
-    margin-left: 20px;
+    width: 505px;
+    margin-left: 5px;
     display: table;
     table-layout: fixed;
  }
@@ -166,5 +289,135 @@ export default {
  .news_description {
   font-size: 15px;
  }
+ .home_community {
+  margin-top: 12px;
+  float: right;
+  width: 610px;
+ }
+ .home_sub {
+  position: relative;
+  margin-top: 10px;
+  width: 1024px;
+  margin: 0 auto;
+ }
+ .head {
+  overflow: hidden;
+    position: relative;
+    margin-bottom: 14px;
+    height: 45px;
+    border-top: 1px solid #225dcb;
+    border-bottom: 1px solid #f1f1f1;
+ }
+ .head h2 {
+  padding: 0 9px;
+    color: #000;
+    line-height: 46px;
+ }
+ .head .more {
+  position: absolute;
+    top: 10px;
+    right: 0;
+    color: #888;
+    font-size: 11px;
+    text-decoration: none;
+ }
+ .head .more span {
+  display: block;
+    margin: 7px 9px;
+    letter-spacing: -1px;
+ }
+ .league_table {
+  float: left;
+  width: 400px;
+  margin-top: 12px;
+ }
+ .rank_table1 {
+  width: 400px;
+  margin-top: 12px;
+  border-top: 1px solid blue;
+ }
+ .table_tab {
+  overflow: hidden;
+    position: relative;
+    z-index: 10;
+    height: 25px;
+    margin-top: -1px;
+    padding: 0 10px;
+    border-bottom: 1px solid #dddddd;
+    text-align: center;
+    box-sizing: border-box;
+ }
+ .table_tab .inner {
+    overflow: hidden;
+    display: flex;
+    justify-content: space-around;
+ }
+ .table_tab .inner a {
+  display: block;
+    color: #666;
+    text-align: center;
+    white-space: normal;
+    font-size: 13px;
+ }
+ .table_content table {
+  width: 100%;
+  margin-bottom: -1px;
+
+ }
+ .table_content .th_num {
+  width: 31px;
+  text-align: left;
+ }
+ .table_content .th_team {
+  width: 134px;
+ }
+ .table_content table span {
+  display: block;
+  padding: 0 4px;
+  line-height: 16px;
+ }
+ .table_content thead th {
+  padding: 8px 0 6px;
+    border-bottom: 1px solid #f2f2f2;
+    background-color: #fbfbfb;
+    color: #999;
+    font-weight: normal;
+    font-size: 11px;
+    letter-spacing: -1px;
+ }
+ .table_content tbody th, .table_content tbody td {
+  padding: 11px 0 8px;
+    border-bottom: 1px solid #f2f2f2;
+    background-color: #fbfbfb;
+    color: #000000;
+    font-weight: normal;
+    font-size: 11px;
+    text-align: center;
+    letter-spacing: -1px;
+ }
+ .table_content .wrap {
+  display: block;
+    position: relative;
+    color: #222;
+    text-align: left;
+    margin-top: -2px;
+    margin-bottom: -2px;
+ }
+ .image_flag {
+  overflow: hidden;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+ }
+ .image_flag img {
+  vertical-align: top;
+ }
+ .info {
+  display: inline-block;
+    vertical-align: middle;
+ }
+
 
 </style>
