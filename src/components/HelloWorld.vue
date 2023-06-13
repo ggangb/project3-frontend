@@ -65,24 +65,24 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th><span>1</span></th>
+            <!-- <tr v-for="(epl, idx) in eng.slice(0, 9)" :key="idx">
+              <th><span>{{epl.position}}</span></th>
               <td>
                 <div class="wrap">
                   <div class="image_flag">
-                    <img>
+                    <img :src="epl.team.crest">
                   </div>
                   <div class="info">
-                    <span class="name">맨시티</span>
+                    <span class="name">{{epl.team.shortName}}</span>
                   </div>
                 </div>
               </td>
-              <td><span>38</span></td>
-              <td><span>28</span></td>
-              <td><span>5</span></td>
-              <td><span>5</span></td>
-              <td><span>89</span></td>
-            </tr>
+              <td><span>{{epl.playedGames}}</span></td>
+              <td><span>{{epl.won}}</span></td>
+              <td><span>{{epl.draw}}</span></td>
+              <td><span>{{epl.lost}}</span></td>
+              <td><span>{{epl.points}}</span></td>
+            </tr> -->
           </tbody>
         </table>
       </div>
@@ -113,18 +113,18 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <!-- <tr v-for="(epl_score, idx) in score_eng.slice(0, 4)" :key="idx">
               <th><span>1</span></th>
               <td>
                 <div class="wrap">
                   <div class="info">
-                    <span class="name">홀란드</span>
+                    <span class="name">{{epl_score.player.name}}</span>
                   </div>
                 </div>
               </td>
-              <td><span>맨시티</span></td>
-              <td><span>36골</span></td>
-            </tr>
+              <td><span>{{epl_score.team.shortName}}</span></td>
+              <td><span>{{epl_score.goals}}</span></td>
+            </tr> -->
           </tbody>
         </table>
       </div>
@@ -137,8 +137,8 @@
 
 <script>
 
-const api_url = "http://localhost:3000/news"; //네이버 뉴스 요청
-const table_url = "http://localhost:3000/table" //리그 테이블 요청
+const api_url = "http://localhost:3000/api/news"; //네이버 뉴스 요청
+// const table_url = "http://localhost:3000/table" //리그 테이블 요청
 const anywhere = "https://proxy.cors.sh/"; //네이버 뉴스 cors 에러
 const headers = {
   'x-cors-api-key': 'temp_5974a9fff22b31e9b3916d06a9f5d686' //cors 설정 헤더
@@ -151,7 +151,17 @@ export default {
       post: [],
       request: [],
       newsData: [],
-      table: []
+      // eng: [],
+      // score_eng: [],
+      // spa: [],
+      // score_spa: [],
+      // ita: [],
+      // score_ita: [],
+      // fra: [],
+      // score_fra: [],
+      // ger: [],
+      // score_ger: [],
+
     }
   },
   methods: {
@@ -187,22 +197,25 @@ export default {
           console.log(error);
         })
     },   
-    getTable() {
-      this.$axios
-        .get(table_url)
-        .then((res) => {
-          this.table = res.data;
-          console.log(this.table)
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-    }
+    // getTable() {
+    //   this.$axios
+    //     .get(table_url)
+    //     .then((res) => {
+    //       this.eng = res.data[0].standings[0].table;
+    //       this.score_eng = res.data[1].scorers;
+    //       console.log(res.data)
+    //       console.log(this.score_eng)
+
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     })
+    // }
   }
   ,
   created(){
     this.getData();
-    this.getTable();
+    // this.getTable();
   }
 };
 </script>
@@ -334,7 +347,6 @@ export default {
  .rank_table1 {
   width: 400px;
   margin-top: 12px;
-  border-top: 1px solid blue;
  }
  .table_tab {
   overflow: hidden;
@@ -413,6 +425,7 @@ export default {
  }
  .image_flag img {
   vertical-align: top;
+  width: 20px;
  }
  .info {
   display: inline-block;

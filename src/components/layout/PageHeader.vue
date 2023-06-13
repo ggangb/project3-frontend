@@ -8,7 +8,7 @@
       </h1>
       <div class="football_tool">
         <button class="nav_btn">
-          <a class="nav_btn_login">로그인</a>
+          <router-link to="/login"><a class="nav_btn_login">로그인</a></router-link>
         </button>
     </div>
     </div>
