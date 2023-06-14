@@ -65,7 +65,7 @@
             </tr>
           </thead>
           <tbody>
-            <!-- <tr v-for="(epl, idx) in eng.slice(0, 9)" :key="idx">
+            <tr v-for="(epl, idx) in eng.slice(0, 10)" :key="idx">
               <th><span>{{epl.position}}</span></th>
               <td>
                 <div class="wrap">
@@ -82,7 +82,7 @@
               <td><span>{{epl.draw}}</span></td>
               <td><span>{{epl.lost}}</span></td>
               <td><span>{{epl.points}}</span></td>
-            </tr> -->
+            </tr>
           </tbody>
         </table>
       </div>
@@ -113,8 +113,8 @@
             </tr>
           </thead>
           <tbody>
-            <!-- <tr v-for="(epl_score, idx) in score_eng.slice(0, 4)" :key="idx">
-              <th><span>1</span></th>
+            <tr v-for="(epl_score, idx) in score_eng.slice(0, 4)" :key="idx">
+              <th><span>{{idx+1}}</span></th>
               <td>
                 <div class="wrap">
                   <div class="info">
@@ -124,7 +124,7 @@
               </td>
               <td><span>{{epl_score.team.shortName}}</span></td>
               <td><span>{{epl_score.goals}}</span></td>
-            </tr> -->
+            </tr>
           </tbody>
         </table>
       </div>
@@ -138,11 +138,11 @@
 <script>
 
 const api_url = "http://localhost:3000/api/news"; //네이버 뉴스 요청
-// const table_url = "http://localhost:3000/table" //리그 테이블 요청
-const anywhere = "https://proxy.cors.sh/"; //네이버 뉴스 cors 에러
-const headers = {
-  'x-cors-api-key': 'temp_5974a9fff22b31e9b3916d06a9f5d686' //cors 설정 헤더
-}
+const table_url = "http://localhost:3000/api/table" //리그 테이블 요청
+// const anywhere = "https://proxy.cors.sh/"; //네이버 뉴스 cors 에러
+// const headers = {
+//   'x-cors-api-key': 'temp_5974a9fff22b31e9b3916d06a9f5d686' //cors 설정 헤더
+// }
 // const cheerio = require('cheerio'); // 크롤링에 사용/
 export default {
   name: 'HelloWorld',
@@ -151,16 +151,16 @@ export default {
       post: [],
       request: [],
       newsData: [],
-      // eng: [],
-      // score_eng: [],
-      // spa: [],
-      // score_spa: [],
-      // ita: [],
-      // score_ita: [],
-      // fra: [],
-      // score_fra: [],
-      // ger: [],
-      // score_ger: [],
+      eng: [],
+      score_eng: [],
+      spa: [],
+      score_spa: [],
+      ita: [],
+      score_ita: [],
+      fra: [],
+      score_fra: [],
+      ger: [],
+      score_ger: [],
 
     }
   },
@@ -174,9 +174,9 @@ export default {
           this.newsData = this.post.map(data => ({ //받아온 데이터의 뉴스 이미지를 위해 img라는 key를 추가
             ...data, img: ''
           }))
-          this.request = this.newsData.map((res) => { //이미지를 가져오기 위해 axios로 요청을 보낼 뉴스url 배열을 생성
-              return this.$axios.get(anywhere + res.link , {headers})
-            })
+      //     this.request = this.newsData.map((res) => { //이미지를 가져오기 위해 axios로 요청을 보낼 뉴스url 배열을 생성
+      //         return this.$axios.get(anywhere + res.link , {headers})
+      //       })
       //  this.$axios
       //  .all(this.request) //만들어 놓은 뉴스 url 배열로 요청보내기
       //  .then(
@@ -197,25 +197,25 @@ export default {
           console.log(error);
         })
     },   
-    // getTable() {
-    //   this.$axios
-    //     .get(table_url)
-    //     .then((res) => {
-    //       this.eng = res.data[0].standings[0].table;
-    //       this.score_eng = res.data[1].scorers;
-    //       console.log(res.data)
-    //       console.log(this.score_eng)
+    getTable() {
+      this.$axios
+        .get(table_url)
+        .then((res) => {
+          this.eng = res.data[0].standings[0].table;
+          this.score_eng = res.data[1].scorers;
+          console.log(res.data)
+          console.log(this.score_eng)
 
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     })
-    // }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    }
   }
   ,
   created(){
     this.getData();
-    // this.getTable();
+    this.getTable();
   }
 };
 </script>
