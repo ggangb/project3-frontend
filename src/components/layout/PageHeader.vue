@@ -2,8 +2,10 @@
   <header class="football_header">
     <div class="football_nav">
       <h1 class="logo_area">
-        <a class="logo_football" >
+        <a  class="logo_football" >
+          <router-link to="/">
           <img class="logo_img" src="@/assets/football.png">
+          </router-link>
         </a>
       </h1>
       <div class="football_tool">
