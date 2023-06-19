@@ -3,7 +3,7 @@
       <div class="content">
         <div class="login_form">
           
-          <form>
+          <form v-on:submit.prevent="loginSubmit">
             <div class="pannel">
               <div class="login_img">
             <img src="@/assets/football.png"/>
@@ -14,13 +14,13 @@
                   <div class="id_line"  :class="{active: idFocus}">
                     <div>
                       <span class="material-symbols-outlined">person</span>
-                      <input  class="form_id" type="text"  v-on:click="idActive()" placeholder="아이디"/>
+                      <input v-model="username"  class="form_id" type="text"  v-on:click="idActive()" placeholder="아이디"/>
                     </div>
                   </div>
                   <div class="pw_line"  :class="{active: pwFocus}">
                     <div>
                       <span class="material-symbols-outlined">lock</span>
-                      <input class="form_pw" type="password"  v-on:click="pwActive()" placeholder="비밀번호" />
+                      <input v-model="password" class="form_pw" type="password"  v-on:click="pwActive()" placeholder="비밀번호" />
                     </div>
                   </div>
                   <ul>
@@ -30,7 +30,7 @@
                   </ul>
                 </div>
                 <div class="login_btn">
-                  <button>
+                  <button type="submit">
                     <span>로그인</span>
                   </button>
                 </div>
@@ -45,11 +45,14 @@
 <script>
 
 
+
 export default {
   data() {
     return {
       idFocus: false,
-      pwFocus: false
+      pwFocus: false,
+      username: '',
+      password: '',
     }
   },
   methods: {
@@ -60,6 +63,28 @@ export default {
     pwActive() {
       this.idFocus = false;
       this.pwFocus = true;
+    },
+    loginSubmit() {
+      console.log(this.username, this.password);
+      const loginUrl = "http://localhost:3000/api/signin";
+      const data = {
+        username : this.username,
+        password : this.password
+      }
+      this.$axios
+        .post(loginUrl, data)
+        .then((res) => {
+          console.log(res)
+          if(res.status === 200) {
+            console.log('로그인 성공')
+            alert('로그인 성공')
+            this.$router.push({path : '/'})
+          } 
+        
+        })
+        .catch(() => {
+          alert('로그인 실패')
+        })
     }
   }
 }

@@ -26,7 +26,7 @@
           <a class="category_btn">뉴스</a>
         </li>
         <li class="category_item">
-          <a class="category_btn">리그순위</a>
+          <a class="category_btn">기록/순위</a>
         </li>
       </ul>
     </div>

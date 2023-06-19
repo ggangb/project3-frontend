@@ -10,29 +10,25 @@
           <ul class="league_list">
             <li class="league_item">
               <a class="link_league">
-                프리미어리그
+                홈
               </a>
               </li>
             <li class="league_item">
               <a class="link_league">
-                세리에
+                커뮤니티
               </a>
             </li>
             <li class="league_item">
               <a class="link_league">
-                분데스리가
+                뉴스
               </a>
             </li>
             <li class="league_item">
               <a class="link_league">
-                라리가
+                기록/순위
               </a>
             </li>
-            <li class="league_item">
-              <a class="link_league">
-                리그앙
-              </a>
-            </li>
+            
           </ul>
         </div>
       </div>
