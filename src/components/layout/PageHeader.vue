@@ -8,9 +8,14 @@
           </router-link>
         </a>
       </h1>
-      <div class="football_tool">
+      <div v-if="!currentUser" class="football_tool">
         <button class="nav_btn">
           <router-link to="/login"><a class="nav_btn_login">로그인</a></router-link>
+        </button>
+    </div>
+    <div v-if="currentUser" class="football_tool">
+        <button class="nav_btn">
+          <a  @click.prevent="logOut" class="nav_btn_login">로그아웃</a>
         </button>
     </div>
     </div>
@@ -35,6 +40,18 @@
 
 <script>
 export default {
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user
+    }
+  },
+  methods: {
+    logOut() {
+      this.$store.dispatch('auth/logout');
+      alert("로그아웃되었습니다.")
+      this.$router.push('/');
+    }
+  }
 
 }
 </script>

@@ -55,6 +55,16 @@ export default {
       password: '',
     }
   },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    },
+  },
+  created() {
+    if (this.loggedIn) {
+      this.$router.push("/");
+    }
+  },
   methods: {
     idActive() {
       this.pwFocus = false;
@@ -66,25 +76,24 @@ export default {
     },
     loginSubmit() {
       console.log(this.username, this.password);
-      const loginUrl = "http://localhost:3000/api/signin";
-      const data = {
+      const user = {
         username : this.username,
         password : this.password
       }
-      this.$axios
-        .post(loginUrl, data)
-        .then((res) => {
-          console.log(res)
-          if(res.status === 200) {
-            console.log('로그인 성공')
-            alert('로그인 성공')
-            this.$router.push({path : '/'})
-          } 
-        
-        })
-        .catch(() => {
-          alert('로그인 실패')
-        })
+      this.$store.dispatch("auth/login", user).then(
+        () => {
+          this.$router.push("/");
+        },
+        (error) => {
+          this.loading = false;
+          this.message =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+        }
+      );
     }
   }
 }
