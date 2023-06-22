@@ -6,14 +6,29 @@
 </template>
 
 <script>
-import Header from './components/layout/PageHeader.vue'
-import Footer from './components/layout/PageFooter.vue'
+import Header from './components/layout/PageHeader.vue';
+import Footer from './components/layout/PageFooter.vue';
+import EventBus from "./common/EventBus";
 
 export default {
   name: 'App',
   components: {
     Header,
     Footer
+  },
+  methods: {
+    logOut() {
+      this.$store.dispatch('auth/logout');
+      this.$router.push('/');
+    }
+  },
+  mounted() {
+    EventBus.on("logout", () => {
+      this.logOut();
+    });
+  },
+  beforeUnmount() {
+    EventBus.remove("logout");
   }
 }
 </script>

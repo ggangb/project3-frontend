@@ -1,4 +1,5 @@
 import axios from 'axios';
+import TokenService from './token.service';
 
 const API_URL = 'http://localhost:3000/api/';
 
@@ -9,27 +10,29 @@ class AuthService {
         return axios
             .post(API_URL + 'signin', user)
             .then(res => {
-                console.log(res)
-                if(res.data.token) {
-                    localStorage.setItem('token', JSON.stringify(res.data.token))
-                    localStorage.setItem('refreshToken', JSON.stringify(res.data.refreshToken))
-                    localStorage.setItem('username', JSON.stringify(res.data.username))
+                if(res.data) {
+                    TokenService.setUser(res.data);
                 }
                 return res.data;
             });
+            
     }
 
     logout() {
-        localStorage.removeItem('user');
+        const user = TokenService.getUser();
+        return axios
+            .post(API_URL + 'signout', user)
+            .then((res) => {
+                alert(res.data.message);
+                TokenService.removeUser();
+            })
     }
 
     register(user) {
-        return axios.post(API_URL + 'signup', {
-            username : user.username,
-            email : user.email,
-            passowrd : user.password
-        });
+        return axios
+        .post(API_URL + 'signup', user);
     }
+    
 }
 
 export default new AuthService();

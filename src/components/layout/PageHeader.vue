@@ -25,7 +25,7 @@
           <a class="category_btn_home">홈</a>
         </li>
         <li class="category_item">
-          <a class="category_btn">커뮤니티</a>
+          <router-link to="/coummunity"><a class="category_btn">커뮤니티</a></router-link>
         </li>
         <li class="category_item">
           <a class="category_btn">뉴스</a>
@@ -47,9 +47,8 @@ export default {
   },
   methods: {
     logOut() {
-      this.$store.dispatch('auth/logout');
-      alert("로그아웃되었습니다.")
-      this.$router.push('/');
+      this.$store.dispatch('auth/logout')
+        this.$router.push('/');
     }
   }
 

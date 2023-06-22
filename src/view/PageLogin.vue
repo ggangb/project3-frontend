@@ -14,19 +14,19 @@
                   <div class="id_line"  :class="{active: idFocus}">
                     <div>
                       <span class="material-symbols-outlined">person</span>
-                      <input v-model="username"  class="form_id" type="text"  v-on:click="idActive()" placeholder="아이디"/>
+                      <input v-model="username"  class="form_id" type="text"  v-on:click="idActive()" placeholder="아이디" required/>
                     </div>
                   </div>
                   <div class="pw_line"  :class="{active: pwFocus}">
                     <div>
                       <span class="material-symbols-outlined">lock</span>
-                      <input v-model="password" class="form_pw" type="password"  v-on:click="pwActive()" placeholder="비밀번호" />
+                      <input v-model="password" class="form_pw" type="password"  v-on:click="pwActive()" placeholder="비밀번호" required/>
                     </div>
                   </div>
                   <ul>
                     <li><a>아이디 찾기</a></li>
                     <li class="pwfind"><a>비밀번호 찾기</a></li>
-                    <li class="join"><a>회원가입</a></li>
+                    <li class="join"> <router-link to="/register"><a>회원가입</a></router-link></li>
                   </ul>
                 </div>
                 <div class="login_btn">
@@ -58,7 +58,7 @@ export default {
   computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
-    },
+    }
   },
   created() {
     if (this.loggedIn) {
@@ -75,31 +75,25 @@ export default {
       this.pwFocus = true;
     },
     loginSubmit() {
-      console.log(this.username, this.password);
       const user = {
         username : this.username,
         password : this.password
       }
-      this.$store.dispatch("auth/login", user).then(
-        () => {
-          this.$router.push("/");
-        },
-        (error) => {
-          this.loading = false;
-          this.message =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-        }
-      );
+     if (user) {
+      this.$store.dispatch("auth/login", user).then(() => {
+        alert('환영합니다.')
+        this.$router.push('/');
+       })
+       .catch(() => {
+        alert('아이디 비밀번호 확인');
+       })
+    } 
     }
   }
 }
 </script>
 
-<style scope>
+<style>
 .container {
   min-height: 650px;
 }
