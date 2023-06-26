@@ -8,7 +8,7 @@ class AuthService {
 
     login(user) {
         return axios
-            .post(API_URL + 'signin', user)
+            .post(API_URL + 'auth/signin', user)
             .then(res => {
                 if(res.data) {
                     TokenService.setUser(res.data);
@@ -21,7 +21,7 @@ class AuthService {
     logout() {
         const user = TokenService.getUser();
         return axios
-            .post(API_URL + 'signout', user)
+            .post(API_URL + 'auth/signout', user)
             .then((res) => {
                 alert(res.data.message);
                 TokenService.removeUser();
@@ -30,7 +30,7 @@ class AuthService {
 
     register(user) {
         return axios
-        .post(API_URL + 'signup', user);
+        .post(API_URL + 'auth/signup', user);
     }
     
 }
