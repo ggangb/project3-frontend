@@ -9,8 +9,8 @@ export const auth = {
   namespaced: true,
   state: initialState,
   actions: {
-    refreshToken({ commit }, accessToken) {
-      commit('refreshToken', accessToken);
+    refreshtoken({ commit }, accessToken) {
+      commit('refreshtoken', accessToken);
     },
     login({ commit }, user) {
       return AuthService.login(user).then(
@@ -43,7 +43,7 @@ export const auth = {
     
   },
   mutations: {
-    refreshToken(state, accessToken) {
+    refreshtoken(state, accessToken) {
       state.status.loggedIn = true;
       state.user = { ...state.user, accessToken: accessToken };
     },
