@@ -19,6 +19,11 @@ class TokenService {
       return JSON.parse(localStorage.getItem("user"));
     }
 
+    getUserName() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      return user?.username;
+    }
+
   
     setUser(user) {
       localStorage.setItem("user", JSON.stringify(user));

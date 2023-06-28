@@ -1,5 +1,5 @@
 <template>
-	<ckeditor v-model="editorContent" :editor="editor" :config="editorConfig" />
+	<ckeditor v-model="editorData" :editor="editor" :config="editorConfig" />
 </template>
 
 <script>
@@ -15,7 +15,7 @@ export default {
     },
     data() {
     return {
-      editorContent: "",
+      editorData: '<p>Content of the editor.</p>',
       editor: ClassicEditor,
       editorConfig: {
         toolbar: ['heading', '|','fontBackgroundColor', 'fontColor', 'fontSize', 'bold', 'italic', '|', 'alignment', 'bulletedList', 'numberedList', 'indent', 'outdent', '|', 'imageUpload', 'insertTable', 'link', '|', 'undo', 'redo' ],
@@ -34,3 +34,10 @@ export default {
   }
     }
 </script>
+
+<style>
+/* style scoped 사용하지말것 */
+.ck-editor__editable {
+  min-height: 500px;
+}
+</style>
