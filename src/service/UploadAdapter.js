@@ -58,13 +58,13 @@ export default class UploadAdapter {
     xhr.addEventListener("abort", () => reject());
     xhr.addEventListener("load", () => {
       const response = xhr.response;
-
+      console.log(xhr.response)
       if (!response || response.error) {
         return reject(response && response.error ? response.error.message : genericErrorText);
       }
 
       resolve({
-        default: response.data,
+        default: response.url,
       });
     });
 
@@ -87,8 +87,6 @@ export default class UploadAdapter {
     data.append("upload", file);
     // 파라미터
     data.append("use_orgin_name", "N");
-
-    console.log(data)
 
     // Send the request.
     this.xhr.send(data);

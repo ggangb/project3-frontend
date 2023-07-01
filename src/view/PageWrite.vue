@@ -9,7 +9,7 @@
           <input v-model="title" class="write_title" type="text" placeholder="제목" required>
         </div>
         <div class="">
-          <CKEditor/>
+          <CKEditor5 v-model="editorData"/>
 
         </div>
         <div class="btn">
@@ -23,13 +23,13 @@
 
 
 <script>
-import CKEditor from '../components/CKEditor5.vue';
+import CKEditor5 from '../components/CKEditor5.vue';
 import BoardService from '../service/board.service';
 import tokenService from '@/service/token.service';
 
 export default {
   components: {
-    CKEditor
+    CKEditor5
   },
   data() {
     return {
@@ -52,7 +52,7 @@ export default {
       
       const writeData = {
         title: this.title,
-        editorData: this.editorData,
+        content: this.editorData,
         username: tokenService.getUserName(),
         date: dateString
       }
@@ -60,6 +60,10 @@ export default {
       BoardService.writeSubmit(writeData)
       .then(res => {
         console.log(res)
+        if(res.status === 200) {
+          this.$router.push("/community");
+          alert('글 작성 완료')
+        }
       })
     }
   },

@@ -9,13 +9,13 @@ import UploadAdapter from '../service/UploadAdapter';
 
     
 export default {
-    name: 'editorComponent',
+    name: 'CKEditor5',
     components: {
             ckeditor: CKEditor.component
     },
     data() {
     return {
-      editorData: '<p>Content of the editor.</p>',
+      editorData: '',
       editor: ClassicEditor,
       editorConfig: {
         toolbar: ['heading', '|','fontBackgroundColor', 'fontColor', 'fontSize', 'bold', 'italic', '|', 'alignment', 'bulletedList', 'numberedList', 'indent', 'outdent', '|', 'imageUpload', 'insertTable', 'link', '|', 'undo', 'redo' ],

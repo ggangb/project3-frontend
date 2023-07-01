@@ -25,7 +25,7 @@
           <a class="category_btn_home">홈</a>
         </li>
         <li class="category_item">
-          <router-link to="/coummunity"><a class="category_btn">커뮤니티</a></router-link>
+          <router-link to="/community"><a class="category_btn">커뮤니티</a></router-link>
         </li>
         <li class="category_item">
           <a class="category_btn">뉴스</a>
