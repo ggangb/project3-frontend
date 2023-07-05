@@ -11,8 +11,14 @@ class BoardService {
         return api.post('/board', writeData)
         
     }
-    getContent(contentId) {
-        return api.get(`/getcontent/${contentId}`)
+    getContent(idx) {
+        return api.get(`/getcontent/${idx}`)
+    }
+    getRank() {
+        return api.get('/getrank')
+    }
+    recommend(idx) {
+        return api.get(`/recommend/${idx}`)
     }
 }
 

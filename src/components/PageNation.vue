@@ -1,8 +1,11 @@
 <template>
-    <div>
-        <a @click="onPageChange(currentPage - 1)">&lt;</a>
-        <a  v-for="(paging, index) in pages" :key="index" v-on:click="onPageChange(paging - 1)" :class="paging - 1 === currentPage ? 'currentPage' : ''">{{ paging }}</a>
-        <a @click="onPageChange(currentPage + 1)">&gt;</a>
+    <div class="paging">
+        <div class="pagable">
+            <a class="prev" @click="onPageChange(currentPage - 1)">이전</a>
+            <a v-for="(paging, index) in pages" :key="index" v-on:click="onPageChange(paging - 1)"
+                :class="paging - 1 === currentPage ? 'currentPage' : ''">{{ paging }}</a>
+            <a class="next" @click="onPageChange(currentPage + 1)">다음</a>
+        </div>
     </div>
 </template>
 
@@ -10,7 +13,7 @@
 
 
 export default {
-    name: 'PageNation' ,
+    name: 'PageNation',
     props: ['currentPage', 'totalPages', 'pageChange'],
     data() {
         return {
@@ -18,8 +21,8 @@ export default {
         }
     },
     computed: {
-        
-        pages: function() {
+
+        pages: function () {
             const list = [];
             for (let index = this.startPage; index <= this.endPage; index += 1) { list.push(index); }
             return list;
@@ -55,7 +58,33 @@ export default {
 </script>
 
 <style scoped>
-.currentPage {
-    background: #A3C010;
+.paging {
+    display: block;
+    max-width: 1024px;
+    padding: 25px 0;
+    
 }
+.pagable {
+    text-align: center;
+}
+
+.currentPage {
+    background: #eeeeed;
+}
+
+.pagable a {
+    display: inline-block;
+    min-width: 12px;
+    height: 24px;
+    padding: 0 6px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    letter-spacing: -1px;
+}
+
+.prev , .next {
+    font-size: small;
+    margin: 0 20px;
+}
+
 </style>

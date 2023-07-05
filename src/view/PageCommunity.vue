@@ -11,17 +11,9 @@
                             <div class="best_board_content">
                                 <ul class="best_left">
                                     <li>베스트 글 1</li>
-                                    <li>베스트 글 2</li>
-                                    <li>베스트 글 3</li>
-                                    <li>베스트 글 4</li>
-                                    <li>베스트 글 5</li>
                                 </ul>
                                 <ul class="best_right">
                                     <li>베스트 글 6</li>
-                                    <li>베스트 글 7</li>
-                                    <li>베스트 글 8</li>
-                                    <li>베스트 글 9</li>
-                                    <li>베스트 글 10</li>
                                 </ul>
                             </div>
                         </div>
@@ -63,8 +55,8 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(contents, idx) in content" :key="idx">
-                                    <td>{{ idx + 1 }}</td>
-                                    <router-link :to="{ name: 'PageView', params: { contentId: contents.id } }">
+                                    <td>{{ contents.idx }}</td>
+                                    <router-link :to="{ name: 'PageView', params: { contentId: contents.idx } }">
                                         <td class="desc">{{ contents.title }}</td>
                                     </router-link>
                                     <td>{{ contents.username }}</td>
@@ -138,6 +130,11 @@ export default {
 
     },
     created() {
+        boardService.getRank().then(
+            (response => {
+                console.log(response)
+            })
+        )
         boardService.getCoummunityBoard(this.page).then(
             (response) => {
                 console.log(response)
@@ -163,6 +160,16 @@ export default {
 </script>
 
 <style scoped>
+a {
+    text-decoration: none;
+    color: black;
+}
+a:hover {
+  text-decoration: underline;
+}
+table {
+    border-collapse: none;
+}
 .tab {
     margin-left: 15px;
     margin-bottom: 15px;

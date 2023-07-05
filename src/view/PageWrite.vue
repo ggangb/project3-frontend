@@ -41,6 +41,11 @@ export default {
   },
   methods: {
     write() {
+      if(this.editorData === '') {
+        alert('내용을 입력하세요.');
+        return
+      }
+
       var today = new Date();
       var year = today.getFullYear();
       var month = ('0' + (today.getMonth() + 1)).slice(-2);
