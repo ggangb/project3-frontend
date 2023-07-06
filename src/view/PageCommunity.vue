@@ -10,10 +10,16 @@
                         <div class="best_board_form">
                             <div class="best_board_content">
                                 <ul class="best_left">
-                                    <li>베스트 글 1</li>
+                                    <li v-for="(rank, idx) in rankData.slice(0,5)" :key="idx" >
+                                        <span></span>
+                                            <router-link :to="{ name: 'PageView', params: { contentId: rank.idx } }">{{ rank.title }}</router-link>
+                                    </li>
                                 </ul>
                                 <ul class="best_right">
-                                    <li>베스트 글 6</li>
+                                    <li v-for="(rank, idx) in rankData.slice(5,10)" :key="idx" >
+                                        <span></span>
+                                        <router-link :to="{ name: 'PageView', params: { contentId: rank.idx } }">{{ rank.title }}</router-link>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -86,6 +92,7 @@ export default {
     data() {
         return {
             content: [],
+            rankData: [],
             headerList: ["날짜", "추천수", "조회수"],
             contentKeyList: ['date', 'recommend', 'view'],
             sortHeader: 'date',
@@ -133,6 +140,8 @@ export default {
         boardService.getRank().then(
             (response => {
                 console.log(response)
+                this.rankData = response.data;
+
             })
         )
         boardService.getCoummunityBoard(this.page).then(
@@ -225,6 +234,8 @@ table {
     line-height: 2.0em;
     margin-left: 10px;
     font-size: small;
+    text-indent: 30px;
+    background: url("@/assets/recommend_FILL0_wght500_GRAD0_opsz20.png") 3px no-repeat;
 }
 
 .btn {
