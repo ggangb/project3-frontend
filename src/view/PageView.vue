@@ -31,6 +31,39 @@
                 <a v-on:click="prevContent()" class="btn_prev">이전글</a>
                 <a v-on:click="nextContent()" class="btn_next">다음글</a>
             </div>
+            <div class="comment">
+                <div class="comment_info">
+                    <span>댓글 00 개</span>
+                    <div class="comment_page">
+                    </div>
+                </div>
+               
+                <ul class="comment_list">
+                    <li class="comment_item">
+                        <div>
+                            <span>유저아이디</span>
+                            <span> 작성시간</span>
+                            <span>수정</span>
+                            <span>삭제</span>
+                        </div>
+                        <div>
+                            <div>내용</div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="com_page">
+
+                </div>
+                <div class="comment_editor">
+                    <strong>댓글쓰기</strong>
+                    <form class="comment_write">
+                        <div class="text">
+                        <textarea></textarea>
+                        <input class="comment_btn" type="submit" value="등록">
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 </template>
 <script>
@@ -52,13 +85,15 @@ export default {
             this.contentId = this.$route.params.contentId
             boardService.getContent(this.contentId).then(
                 (res) => {
+                    const cookie = this.$cookies.get('viewCount');
+                    console.log(cookie)
                     console.log(res)
                     this.content = res.data
                     this.prev = res.data.prev;
                     this.next = res.data.next;
-
+                    
                 }
-            )
+                )
         },
         prevContent() {
             if(this.prev === null) {
@@ -188,6 +223,8 @@ export default {
 .btn_prev_next .btn_list {
     display: inline-block;
     width: 250px;
+    color: black !important;
+    text-decoration: none;
 }
 
 .btn_prev_next .btn_prev {
@@ -209,5 +246,71 @@ export default {
     border-radius: 3px;
     padding: 5px;
     ;
+}
+
+.category_btn_com {
+font-weight: 800;
+  color: white !important;
+}
+
+.comment {
+
+}
+
+.comment_info {
+    position: relative;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 12px;
+    z-index: 10;
+}
+.comment_page {
+    float: right;
+}
+.comment_list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+}
+.comment_item{
+    position: relative;
+    margin: -1px 0;
+    padding: 11px 11px 10px 88px;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    background-color: inherit;
+}
+.com_page {
+    padding: 10px 0 0;
+    text-align: center;
+}
+.comment_editor {
+    margin-bottom: 15px;
+    padding: 12px 16px 20px;
+    background: #fcfcfc;
+    border: 1px solid #ddd;
+    border-bottom-color: #ccc;
+    border-radius: 8px;
+}
+.comment_editor textarea {
+    background: rgb(255, 255, 255);
+    overflow: hidden;
+    min-height: 4em;
+    height: 49px;
+    width: 92%;
+    margin-left: 3px;
+}
+.comment_btn {
+    width: 56px;
+    height: 56px;
+    line-height: 56px;
+    margin-left: 10px;
+    position: absolute;
+}
+.comment_editor strong {
+    display: block;
+    margin: 10px;
 }
 </style>

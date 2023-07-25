@@ -26,11 +26,23 @@ const routes = [
   },
   {
     path: '/community',
-    name: 'PageCommunity',
+    children: [
+      {
+        path:'',
+        name: 'PageCommunity',
+        component: () => import(/* webpackChunkName: "about" */ './view/PageCommunity.vue'),
+      },
+      {
+        path: ':contentId',
+        name: 'PageView',
+        component: () => import(/* webpackChunkName: "about" */ './view/PageView.vue'),
+      }
+
+    ]
+   
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ './view/PageCommunity.vue')
   },
   {
     path: '/write',
@@ -40,16 +52,16 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ './view/PageWrite.vue')
   },
-  {
-    path: '/view/:contentId',
-    name: 'PageView',
-    props: true,
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ './view/PageView.vue')
+  // {
+  //   path: '/community/:contentId',
+  //   name: 'PageView',
+  //   props: true,
+  //   // route level code-splitting
+  //   // this generates a separate chunk (about.[hash].js) for this route
+  //   // which is lazy-loaded when the route is visited.
+  //   component: () => import(/* webpackChunkName: "about" */ './view/PageView.vue')
 
-  }
+  // }
 
 ]
 

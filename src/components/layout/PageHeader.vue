@@ -22,16 +22,16 @@
     <div class="football_nav_sub">
       <ul class="football_category">
         <li class="category_item">
-          <a class="category_btn_home">홈</a>
+          <router-link to="/"><span class="category_home">홈</span></router-link>
         </li>
         <li class="category_item">
-          <router-link to="/community"><a class="category_btn">커뮤니티</a></router-link>
+          <router-link to="/community"><span class="category_btn_com">커뮤니티</span></router-link>
         </li>
         <li class="category_item">
-          <a class="category_btn">뉴스</a>
+          <a class="category_btn_news">뉴스</a>
         </li>
         <li class="category_item">
-          <a class="category_btn">기록/순위</a>
+          <a class="category_btn_rank">기록/순위</a>
         </li>
       </ul>
     </div>
@@ -56,6 +56,10 @@ export default {
 </script>
 
 <style scoped>
+a {
+  text-decoration: none;
+  color: rgba(255,255,255,0.5);
+}
  .football_header {
   background-image: linear-gradient(256deg,#28b4ff,#255fbe);
   position: relative;
@@ -90,30 +94,21 @@ export default {
 .nav_btn_login {
   width: 45px;
   height: 25px;
+  color: black;
 }
 .category_item {
   float: left;
   margin-left: 15px;
   font-weight: bold;
-  color: #fff;
-}
-.category_item .category_btn {
-  display: block;
-    padding: 18px 10px 20px;
-    font-size: 18px;
-    line-height: 22px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.5);
-}
-.category_btn_home {
-  display: block;
-    height: 100%;
     padding: 18px 10px 20px;
     font-size: 20px;
     line-height: 22px;
-    font-weight: bold;
-    color: rgb(255, 255, 255);
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
 }
+
+
 .football_category {
   display: flex;
   width: 1024px;
@@ -128,5 +123,10 @@ export default {
 
 ul {
   list-style: none;
+}
+
+.router-link-active {
+  font-weight: 800;
+  color: white !important;
 }
 </style>

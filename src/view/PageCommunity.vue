@@ -12,13 +12,13 @@
                                 <ul class="best_left">
                                     <li v-for="(rank, idx) in rankData.slice(0,5)" :key="idx" >
                                         <span></span>
-                                            <router-link :to="{ name: 'PageView', params: { contentId: rank.idx } }">{{ rank.title }}</router-link>
+                                        <router-link :to="`community/${rank.idx}`">{{ rank.title }}</router-link>
                                     </li>
                                 </ul>
                                 <ul class="best_right">
                                     <li v-for="(rank, idx) in rankData.slice(5,10)" :key="idx" >
                                         <span></span>
-                                        <router-link :to="{ name: 'PageView', params: { contentId: rank.idx } }">{{ rank.title }}</router-link>
+                                        <router-link :to="`community/${rank.idx}`">{{ rank.title }}</router-link>
                                     </li>
                                 </ul>
                             </div>
@@ -62,7 +62,7 @@
                             <tbody>
                                 <tr v-for="(contents, idx) in content" :key="idx">
                                     <td>{{ contents.idx }}</td>
-                                    <router-link :to="{ name: 'PageView', params: { contentId: contents.idx } }">
+                                    <router-link :to="`community/${contents.idx}`">
                                         <td class="desc">{{ contents.title }}</td>
                                     </router-link>
                                     <td>{{ contents.username }}</td>
@@ -187,6 +187,7 @@ table {
 .container {
     width: 100%;
     max-width: 1024px;
+    min-height: 800px;
     margin: 0 auto;
     background: #fff;
 }
