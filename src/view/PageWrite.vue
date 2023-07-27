@@ -13,7 +13,7 @@
 
         </div>
         <div class="btn">
-          <button class="cancel">취소</button>
+          <router-link to="/community"><button class="cancel">취소</button></router-link>
           <button type="submit" class="success">등록</button>
         </div>
       </form>

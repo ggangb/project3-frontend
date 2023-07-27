@@ -20,6 +20,12 @@ class BoardService {
     recommend(idx) {
         return api.get(`/recommend/${idx}`)
     }
+    upmentSubmit(upmentData) {
+        return api.post('/upmment', upmentData)
+    }
+    getUpment(pageable,postId) {
+        return api.get(`/upment/${postId}`,{ params: pageable});
+    }
 }
 
 export default new BoardService();

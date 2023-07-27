@@ -87,4 +87,15 @@ export default {
     margin: 0 20px;
 }
 
+.paging.compage {
+    max-width: 300px;
+    font-size: 10px;
+    vertical-align: middle;
+    padding: 0;
+}
+
+.paging.compage .pagable a {
+    display: unset;
+}
+
 </style>
