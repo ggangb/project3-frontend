@@ -23,8 +23,17 @@ class BoardService {
     upmentSubmit(upmentData) {
         return api.post('/upmment', upmentData)
     }
+    downmentSubmit(downmentData) {
+        return api.post('/downment', downmentData)
+    }
+    downmentReSubmit(downmentData) {
+        return api.post('/redownment', downmentData)
+    }
     getUpment(pageable,postId) {
         return api.get(`/upment/${postId}`,{ params: pageable});
+    }
+    getDownment(postId) {
+        return api.get(`/downment/${postId}`)
     }
 }
 
