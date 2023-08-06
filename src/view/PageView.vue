@@ -33,7 +33,7 @@
         </div>
         <div class="comment">
             <div class="comment_info">
-                <span>댓글 {{ count }} 개</span>
+                <span>댓글 {{ comment.length }} 개</span>
                 <div class="comment_page">
                     <PageNation class="compage" :currentPage="page.page" :totalPages="totalPages"
                         :pageChange="onPageChange" />
@@ -41,9 +41,10 @@
             </div>
 
             <ul class="comment_list">
-                <template v-for="(contents, idx) in upment" :key="idx">
-                    <li class="comment_item">
+                <template v-for="(contents, idx) in comment" :key="idx">
+                    <li v-bind:style="{ 'margin-left' : (contents.level * 10) + 'px' }" class="comment_item">
                         <div :index="idx" class="upment_info">
+                            <span v-if="contents.level > 0" class="and">ㄴ</span>
                             <span class="writer">{{ contents.writer }}</span>
                             <span class="date"> {{ contents.date }}</span>
                             <span class="edit">수정</span>
@@ -56,7 +57,7 @@
                         <div class="downment_editor" v-if="modal && index === idx">
                             <span class="and">ㄴ</span>
                             <strong>답글쓰기</strong>
-                            <form v-on:submit.prevent="downmentWrite(contents.id, postId)" class="comment_write">
+                            <form v-on:submit.prevent="reCommentWrite(contents.id,postId)" class="comment_write">
                                 <div class="text">
                                     <textarea v-model="text"></textarea>
                                     <input class="downment_btn" type="submit" value="등록">
@@ -64,33 +65,6 @@
                             </form>
                         </div>
                     </li>
-                    <template v-for="(downments, idx) in downment" :key="idx">
-                        <li v-if="contents.id === downments.upmentId" class="comment_item"
-                            v-bind:style="{ 'margin-left': '20px' }">
-                            <div :index="idx" class="downment_info">
-                                <span class="and">ㄴ</span>
-                                <span class="writer">{{ downments.writer }}</span>
-                                <span class="date"> {{ downments.date }}</span>
-                                <span class="edit">수정</span>
-                                <span class="edit">삭제</span>
-                                <span class="edit" v-on:click="showReModal(idx)">답글</span>
-                            </div>
-                            <div class="downment_content">
-                                <pre>{{ downments.text }}</pre>
-                            </div>
-                            <div class="downment_editor" v-if="remodal && index === idx">
-                                <span class="and">ㄴ</span>
-                                <strong>답글쓰기</strong>
-                                <form v-on:submit.prevent="downmentReWrite(downments.id)" class="comment_write">
-                                    <div class="text">
-                                        <textarea v-model="text"></textarea>
-                                        <input class="downment_btn" type="submit" value="등록">
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-                        
-                    </template>
                 </template>
 
             </ul>
@@ -122,16 +96,15 @@ export default {
             modal: false,
             remodal: false,
             index: 0,
-            upment: [],
-            downment: [],
+            comment: [],
             text: '',
             writer: '',
             date: '',
             content: '',
-            count: 0,
             prev: 0,
             next: 0,
             contentId: 0,
+            level: 1,
             postId: '',
             totalPages: 0,
             page: {
@@ -165,23 +138,13 @@ export default {
                     this.postId = res.data.id;
                     console.log(this.page)
                     console.log(this.postId)
-                    boardService.getUpment(this.page, this.postId).then(
-                        (res) => {
-                            console.log(res)
-                            this.upment = res.data.content;
-                            this.totalPages = res.data.totalPages;
-                            this.page.page = res.data.number;
-                            this.count = res.data.content.length;
-                            console.log(this.count);
-                        }
-                    )
-                    boardService.getDownment(this.postId).then(
-                        (response) => {
-                            console.log(response)
-                            this.downment = response.data;
-                            console.log(this.downment)
-                        }
-                    )
+                }
+            )
+            boardService.getComment().then(
+                (response) => {
+                    console.log(response)
+                    this.comment = response.data;
+
                 }
             )
         },
@@ -226,10 +189,41 @@ export default {
                 text: this.text,
                 writer: tokenService.getUserName(),
                 date: dateString,
-                postId: this.postId
+                postId: this.postId,
             }
+
+            console.log(upmentData)
             boardService.upmentSubmit(upmentData)
                 .then(res => {
+                    console.log(res)
+                    if (res.status === 200) {
+                        alert('댓글 작성 완료')
+                        this.getContent();
+                        this.text = '';
+                    }
+                })
+
+        },
+        reCommentWrite(id,postId) {
+            var today = new Date();
+            var year = today.getFullYear();
+            var month = ('0' + (today.getMonth() + 1)).slice(-2);
+            var day = ('0' + today.getDate()).slice(-2);
+            var hours = ('0' + today.getHours()).slice(-2);
+            var minutes = ('0' + today.getMinutes()).slice(-2);
+
+            var dateString = year + '-' + month + '-' + day + " " + hours + ":" + minutes;
+            const reCommentData = {
+                text: this.text,
+                writer: tokenService.getUserName(),
+                date: dateString,
+                postId: postId,
+                parentnum: id,
+
+            }
+            console.log(reCommentData)
+            boardService.reCommendSubmit(reCommentData)
+                .then( res => {
                     console.log(res)
                     if (res.status === 200) {
                         alert('댓글 작성 완료')
@@ -261,65 +255,6 @@ export default {
             }
 
 
-        },
-        downmentWrite(id) {
-            var today = new Date();
-            var year = today.getFullYear();
-            var month = ('0' + (today.getMonth() + 1)).slice(-2);
-            var day = ('0' + today.getDate()).slice(-2);
-            var hours = ('0' + today.getHours()).slice(-2);
-            var minutes = ('0' + today.getMinutes()).slice(-2);
-
-            var dateString = year + '-' + month + '-' + day + " " + hours + ":" + minutes;
-            const downmentData = {
-                text: this.text,
-                writer: tokenService.getUserName(),
-                date: dateString,
-                postId: this.postId,
-                upmentId: id,
-            }
-
-            console.log(downmentData)
-            boardService.downmentSubmit(downmentData)
-                .then(res => {
-                    console.log(res)
-                    if (res.status === 200) {
-                        alert('답글 작성 완료')
-                        this.getContent();
-                        this.text = '';
-                        this.modal = false;
-                    }
-                })
-        },
-        downmentReWrite(id) {
-            var today = new Date();
-            var year = today.getFullYear();
-            var month = ('0' + (today.getMonth() + 1)).slice(-2);
-            var day = ('0' + today.getDate()).slice(-2);
-            var hours = ('0' + today.getHours()).slice(-2);
-            var minutes = ('0' + today.getMinutes()).slice(-2);
-
-            var dateString = year + '-' + month + '-' + day + " " + hours + ":" + minutes;
-            const downmentData = {
-                text: this.text,
-                writer: tokenService.getUserName(),
-                date: dateString,
-                postId: this.postId,
-                upmentId: id,
-            }
-
-            console.log(downmentData)
-            boardService.downmentReSubmit(downmentData)
-                .then(res => {
-                    console.log(res)
-                    if (res.status === 200) {
-                        alert('답글 작성 완료')
-                        this.getContent();
-                        this.text = '';
-                        this.modal = false;
-                        this.remodal = false;
-                    }
-                })
         },
 
     },

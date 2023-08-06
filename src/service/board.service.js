@@ -21,20 +21,15 @@ class BoardService {
         return api.get(`/recommend/${idx}`)
     }
     upmentSubmit(upmentData) {
-        return api.post('/upmment', upmentData)
+        return api.post('/comment', upmentData)
     }
-    downmentSubmit(downmentData) {
-        return api.post('/downment', downmentData)
+    getComment() {
+        return api.get('/comment')
     }
-    downmentReSubmit(downmentData) {
-        return api.post('/redownment', downmentData)
+    reCommendSubmit(reCommentData) {
+        return api.post('/recomment', reCommentData)
     }
-    getUpment(pageable,postId) {
-        return api.get(`/upment/${postId}`,{ params: pageable});
-    }
-    getDownment(postId) {
-        return api.get(`/downment/${postId}`)
-    }
+   
 }
 
 export default new BoardService();
