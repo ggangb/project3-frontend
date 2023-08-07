@@ -31,6 +31,10 @@
             <a v-on:click="prevContent()" class="btn_prev">이전글</a>
             <a v-on:click="nextContent()" class="btn_next">다음글</a>
         </div>
+        <div class="board_edit">
+            <router-link v-if="content.username === username" class="update" :to="`/community/update/${this.contentId}`">수정</router-link>
+            <a v-on:click="boardDelete(this.postId)" class="delete">삭제</a>
+        </div>
         <div class="comment">
             <div class="comment_info">
                 <span>댓글 {{ comment.length }} 개</span>
@@ -42,24 +46,25 @@
 
             <ul class="comment_list">
                 <template v-for="(contents, idx) in comment" :key="idx">
-                    <li v-bind:style="{ 'margin-left' : (contents.level * 10) + 'px' }" class="comment_item">
+                    <li v-bind:style="{ 'margin-left': (contents.level * 15) + 'px' }" class="comment_item">
                         <div :index="idx" class="upment_info">
                             <span v-if="contents.level > 0" class="and">ㄴ</span>
                             <span class="writer">{{ contents.writer }}</span>
                             <span class="date"> {{ contents.date }}</span>
-                            <span class="edit">수정</span>
-                            <span class="edit">삭제</span>
-                            <span class="edit" v-on:click="showModal(idx)">답글</span>
+                            <span class="edit" v-if="contents.writer === username && contents.deleteYn === 'N'" v-on:click="showUpdateModal(idx, contents)">수정</span>
+                            <span class="edit" v-if="contents.deleteYn === 'N'" v-on:click="deleteComment(contents.id)">삭제</span>
+                            <span class="edit" v-if="contents.deleteYn === 'N'" v-on:click="showModal(idx)">답글</span>
                         </div>
                         <div class="upment_content">
-                            <pre>{{ contents.text }}</pre>
+                            <pre v-text="contents.text"></pre>
                         </div>
-                        <div class="downment_editor" v-if="modal && index === idx">
+                        <div class="downment_editor" v-if="modal && index === idx || upmodal && index === idx">
                             <span class="and">ㄴ</span>
                             <strong>답글쓰기</strong>
-                            <form v-on:submit.prevent="reCommentWrite(contents.id,postId)" class="comment_write">
+                            <form v-on:submit.prevent="reCommentWrite(contents.id, postId)" class="comment_write">
                                 <div class="text">
-                                    <textarea v-model="text"></textarea>
+                                    <textarea v-if="modal" v-model="text"></textarea>
+                                    <textarea v-if="upmodal" v-text="contents.text" v-on:change="changeText($event)"></textarea>
                                     <input class="downment_btn" type="submit" value="등록">
                                 </div>
                             </form>
@@ -93,13 +98,16 @@ export default {
     components: { PageNation },
     data() {
         return {
+            username: '',
             modal: false,
-            remodal: false,
+            upmodal: false,
             index: 0,
             comment: [],
+            updateContent: [],
             text: '',
             writer: '',
             date: '',
+            updateText: '',
             content: '',
             prev: 0,
             next: 0,
@@ -110,7 +118,7 @@ export default {
             page: {
                 page: 0,
                 size: 10,
-                sort: 'date,desc'
+                sort: 'ref,desc'
             },
         }
     },
@@ -138,13 +146,15 @@ export default {
                     this.postId = res.data.id;
                     console.log(this.page)
                     console.log(this.postId)
-                }
-            )
-            boardService.getComment().then(
-                (response) => {
-                    console.log(response)
-                    this.comment = response.data;
+                    boardService.getComment(this.page, this.postId).then(
+                        (response) => {
+                            console.log(response)
+                            this.comment = response.data.content;
+                            this.totalPages = response.data.totalPages;
+                            this.page.page = response.data.number;
 
+                        }
+                    )
                 }
             )
         },
@@ -204,7 +214,7 @@ export default {
                 })
 
         },
-        reCommentWrite(id,postId) {
+        reCommentWrite(id, postId) {
             var today = new Date();
             var year = today.getFullYear();
             var month = ('0' + (today.getMonth() + 1)).slice(-2);
@@ -213,50 +223,102 @@ export default {
             var minutes = ('0' + today.getMinutes()).slice(-2);
 
             var dateString = year + '-' + month + '-' + day + " " + hours + ":" + minutes;
-            const reCommentData = {
-                text: this.text,
-                writer: tokenService.getUserName(),
-                date: dateString,
-                postId: postId,
-                parentnum: id,
 
+            if (this.modal) {
+                const reCommentData = {
+                    text: this.text,
+                    writer: tokenService.getUserName(),
+                    date: dateString,
+                    postId: postId,
+                    parentnum: id
+                }
+                console.log(reCommentData)
+                boardService.reCommendSubmit(reCommentData)
+                    .then(res => {
+                        console.log(res)
+                        if (res.status === 200) {
+                            alert('댓글 작성 완료')
+                            this.getContent();
+                            this.text = '';
+                            this.modal = false;
+                            this.upmodal = false;
+                        }
+                    })
+            } else {
+                const reCommentData = this.updateContent
+                reCommentData.parentnum = id;
+                reCommentData.text = this.updateText;
+                console.log(reCommentData)
+                boardService.reCommendUpdate(reCommentData)
+                    .then(res => {
+                        console.log(res)
+                        if (res.status === 200) {
+                            alert('댓글 수정 완료')
+                            this.getContent();
+                            this.text = '';
+                            this.modal = false;
+                            this.upmodal = false;
+                        }
+                    })
             }
-            console.log(reCommentData)
-            boardService.reCommendSubmit(reCommentData)
-                .then( res => {
-                    console.log(res)
-                    if (res.status === 200) {
-                        alert('댓글 작성 완료')
-                        this.getContent();
-                        this.text = '';
-                    }
-                })
 
+
+
+        },
+
+        changeText() {
+            this.updateText = event.target.value;
+            console.log(this.updateText)
         },
 
         showModal(idx) {
             if (this.modal === false) {
+                this.upmodal = false;
                 this.index = idx;
                 this.modal = true;
-                this.remodal = false;
             } else {
                 this.modal = false;
             }
 
 
         },
-        showReModal(idx) {
-            if (this.remodal === false) {
+        showUpdateModal(idx, contents) {
+            if (this.upmodal === false) {
+                this.updateContent = contents
+                console.log(contents)
+                this.modal = false;
                 this.index = idx;
-                this.remodal = true;
-                this.modal = false;
+                this.upmodal = true;
             } else {
-                this.remodal = false;
+                this.upmodal = false;
             }
 
 
         },
+        boardDelete(postId) {
+            console.log(postId)
+            boardService.deleteBoard(postId)
+                .then(res => {
+                    console.log(res);
+                    if (res.status === 200) {
+                        alert('글 삭제 완료')
+                        this.$router.push("/community");
+                    }
+                })
 
+        },
+        deleteComment(contentId) {
+            console.log(contentId)
+            boardService.deleteComment(contentId)
+                .then(res => {
+                    console.log(res)
+                    if (res.status === 200) {
+                        alert('댓글 삭제 완료')
+                        this.getContent()
+
+                    }
+                })
+        }
     },
     mounted() {
         // var contentId = this.$route.params.contentId
@@ -267,6 +329,8 @@ export default {
         //     }
         // )
         this.getContent();
+        this.username = tokenService.getUserName();
+
 
 
     },
@@ -345,11 +409,19 @@ export default {
     margin: 15px 0;
 }
 
-.btn_prev_next {
+.btn_prev_next,
+.board_edit {
     margin: 10px;
     position: relative;
     text-align: center;
 }
+
+.board_edit .delete,
+.board_edit .update {
+    margin: 10px;
+    border: 1px solid black;
+}
+
 
 .btn_prev_next .btn_list {
     display: inline-block;
@@ -369,7 +441,9 @@ export default {
 
 }
 
-.btn_prev_next a {
+.btn_prev_next a,
+.board_edit .delete,
+.board_edit .update {
     top: 0;
     border: 1px solid #c2c2c2;
     border-top-color: #d2d2d2;
@@ -425,11 +499,6 @@ export default {
     height: 15px;
 }
 
-.downment_info {
-    padding-left: 20px;
-    margin-bottom: 20px;
-    height: 15px;
-}
 
 .upment_info .writer,
 .date {
@@ -441,18 +510,11 @@ export default {
     margin: 0 5px;
 }
 
-.downment_info .edit {
-    float: right;
-    margin: 0 5px;
-}
 
 .upment_content {
     padding: 0 12px;
 }
 
-.downment_content {
-    padding: 0 36px;
-}
 
 
 .com_page {
@@ -503,13 +565,6 @@ export default {
     margin-left: 3px;
 }
 
-.downment_editor .and {
-    padding: 0 12px;
-}
-
-.downment_editor form {
-    margin-left: 40px;
-}
 
 /* .downment_editor {
     margin-bottom: 15px;
@@ -523,5 +578,4 @@ export default {
 .comment_editor strong {
     display: block;
     margin: 10px;
-}
-</style>
+}</style>

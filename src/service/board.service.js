@@ -23,11 +23,23 @@ class BoardService {
     upmentSubmit(upmentData) {
         return api.post('/comment', upmentData)
     }
-    getComment() {
-        return api.get('/comment')
+    getComment(pageable,postId) {
+        return api.get(`/comment/${postId}`,{ params: pageable})
     }
     reCommendSubmit(reCommentData) {
         return api.post('/recomment', reCommentData)
+    }
+    deleteBoard(postId) {
+        return api.delete(`/deleteboard/${postId}`)
+    }
+    updateBoard(updateData) {
+        return api.put('/updateboard', updateData)
+    }
+    reCommendUpdate(reCommentData) {
+        return api.put('/updaterecomment', reCommentData)
+    }
+    deleteComment(postId) {
+        return api.put(`/deletecomment/${postId}`)
     }
    
 }

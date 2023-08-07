@@ -36,7 +36,23 @@ const routes = [
         path: ':contentId',
         name: 'PageView',
         component: () => import(/* webpackChunkName: "about" */ './view/PageView.vue'),
-      }
+      },
+      {
+        path: '/community/write',
+        name: 'PageWrite',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "about" */ './view/PageWrite.vue')
+      },
+      {
+        path: '/community/update/:contentId',
+        name: 'PageUpdate',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "about" */ './view/PageUpdate.vue')
+      },
 
     ]
    
@@ -44,14 +60,7 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
   },
-  {
-    path: '/write',
-    name: 'PageWrite',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ './view/PageWrite.vue')
-  },
+  
   // {
   //   path: '/community/:contentId',
   //   name: 'PageView',

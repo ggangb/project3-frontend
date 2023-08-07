@@ -37,7 +37,7 @@
                             <option value="desc">내림차순</option>
                             <option value="asc">오름차순</option>
                         </select>
-                        <router-link to="/write">
+                        <router-link to="/community/write">
                             <div class="btn"><button>글쓰기</button></div>
                         </router-link>
                         <table class="board_list">
@@ -137,6 +137,7 @@ export default {
 
     },
     created() {
+       
         boardService.getRank().then(
             (response => {
                 console.log(response)
