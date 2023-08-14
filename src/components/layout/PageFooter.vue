@@ -14,9 +14,11 @@
               </a>
               </li>
             <li class="league_item">
+              <router-link to="/community">
               <a class="link_league">
                 커뮤니티
               </a>
+            </router-link>
             </li>
             <li class="league_item">
               <a class="link_league">
@@ -105,6 +107,7 @@ export default {
   padding-top: 35px;
   justify-content: center;
   border-top: 1px solid #e3e2e2;
+  text-align: center;
 }
 
 .footer_info .button, .footer_info .link {
@@ -123,6 +126,7 @@ export default {
     letter-spacing: -0.3px;
     word-break: keep-all;
     color: #8a909e;
+    text-align: center;
 }
 
   ul {

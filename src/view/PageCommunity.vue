@@ -5,7 +5,7 @@
                 <div class="best_board">
                     <div class="best_inner">
                         <ul>
-                            <li class="tab">실시간</li>
+                            <li class="tab">추천글</li>
                         </ul>
                         <div class="best_board_form">
                             <div class="best_board_content">
@@ -183,6 +183,9 @@ table {
 .tab {
     margin-left: 15px;
     margin-bottom: 15px;
+}
+.board_list tr {
+    background-color: #f7f7f7;
 }
 
 .container {

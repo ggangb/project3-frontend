@@ -59,8 +59,8 @@
                             <pre v-text="contents.text"></pre>
                         </div>
                         <div class="downment_editor" v-if="modal && index === idx || upmodal && index === idx">
-                            <span class="and">ㄴ</span>
-                            <strong>답글쓰기</strong>
+                            <strong v-if="modal">ㄴ 답글쓰기</strong>
+                            <strong v-if="upmodal">ㄴ 답글수정</strong>
                             <form v-on:submit.prevent="reCommentWrite(contents.id, postId)" class="comment_write">
                                 <div class="text">
                                     <textarea v-if="modal" v-model="text"></textarea>
@@ -508,6 +508,7 @@ export default {
 .upment_info .edit {
     float: right;
     margin: 0 5px;
+    font-size: 12px;
 }
 
 
@@ -566,16 +567,21 @@ export default {
 }
 
 
-/* .downment_editor {
+.downment_editor {
     margin-bottom: 15px;
     padding: 12px 16px 20px;
     background: #fcfcfc;
     border: 1px solid #ddd;
     border-bottom-color: #ccc;
     border-radius: 8px;
-} */
+}
 
 .comment_editor strong {
     display: block;
     margin: 10px;
-}</style>
+}
+.downment_editor strong {
+    display: block;
+    margin: 10px;
+}
+</style>
