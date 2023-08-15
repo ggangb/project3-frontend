@@ -28,7 +28,7 @@
           <router-link to="/community"><span class="category_btn_com">커뮤니티</span></router-link>
         </li>
         <li class="category_item">
-          <a class="category_btn_news">뉴스</a>
+          <router-link to="/news"><span class="category_btn_news">뉴스</span></router-link>
         </li>
         <li class="category_item">
           <a class="category_btn_rank">기록/순위</a>

@@ -60,6 +60,14 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
   },
+  {
+    path: '/news',
+    name: 'PageNews',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ './view/PageNews.vue')
+  },
   
   // {
   //   path: '/community/:contentId',
