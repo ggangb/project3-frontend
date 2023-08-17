@@ -31,7 +31,7 @@
           <router-link to="/news"><span class="category_btn_news">뉴스</span></router-link>
         </li>
         <li class="category_item">
-          <a class="category_btn_rank">기록/순위</a>
+          <router-link to="/rank"><span class="category_btn_rank">기록/순위</span></router-link>
         </li>
       </ul>
     </div>
