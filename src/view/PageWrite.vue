@@ -34,7 +34,6 @@ export default {
   data() {
     return {
       title: '',
-      editorData: this.editorData,
       username: '',
       date: ''
     }
@@ -66,8 +65,8 @@ export default {
       .then(res => {
         console.log(res)
         if(res.status === 200) {
-          this.$router.push("/community");
           alert('글 작성 완료')
+          this.$router.push("/community");
         }
       })
     }

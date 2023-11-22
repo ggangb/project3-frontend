@@ -44,12 +44,16 @@
                         </li>
                     </ul>
                 </div>
-                <div class="date_season">
+                <div class="date_season" v-if="this.now_league !== 'CL'">
                     <h2 class="season_h" v-if="!select_menu" ><span>{{ this.season }} / {{ Number(this.season)+1 }} 시즌</span>팀 순위</h2> 
                     <h2 class="season_h" v-else ><span>{{ this.season }} / {{ Number(this.season)+1 }} 시즌</span>개인 순위</h2>
                 </div>
+                <div class="date_season" v-if="this.now_league === 'CL'">
+                    <h2 class="season_h" v-if="!select_menu && this.now_league === 'CL'" ><span>{{ this.season }} / {{ Number(this.season)+1 }} 시즌</span>챔피언스리그 순위</h2> 
+                    <h2 class="season_h" v-else ><span>{{ this.season }} / {{ Number(this.season)+1 }} 시즌</span>개인 순위</h2>
+                </div>
                 <div class="date_select_tab">
-                    <div class="select_box">
+                    <div class="select_box" v-if="this.now_league !== 'CL'">
                         <select autofocus class="select_season" @change="seasonChange($event)">
                             <option value="2023" class="season" selected>2023/2024</option>
                             <option value="2022">2022/2023</option>
@@ -57,9 +61,106 @@
                             <option value="2020">2020/2021</option>
                         </select>
                     </div>
+                    <div class="select_box" v-else>
+                        <select autofocus class="select_season" >
+                            <option value="2023" class="season" selected>2023/2024</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="record_table"  v-for="(league, idx) in league_data" :key="idx">
+                    <strong v-if="!select_menu">{{ league.group }}</strong>
+                    <table v-if="!select_menu && this.now_league === 'CL'">
+                        <colgroup>
+                            <col width="45">
+                            <col width="*">
+                            <col width="80">
+                            <col width="80">
+                            <col width="80">
+                            <col width="80">
+                            <col width="80">
+                            <col width="80">
+                            <col width="80">
+                            <col width="80">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    <div><strong>순위</strong></div>
+                                </th>
+                                <th scope="col">
+                                    <div class="team"><strong>팀</strong></div>
+                                </th>
+                                <th scope="col">
+                                    <div><strong>경기수</strong></div>
+                                </th>
+                                <th scope="col">
+                                    <div><strong>승점</strong></div>
+                                </th>
+                                <th scope="col">
+                                    <div><strong>승</strong></div>
+                                </th>
+                                <th scope="col">
+                                    <div><strong>무</strong></div>
+                                </th>
+                                <th scope="col">
+                                    <div><strong>패</strong></div>
+                                </th>
+                                <th scope="col">
+                                    <div><strong>득점</strong></div>
+                                </th>
+                                <th scope="col">
+                                    <div><strong>실점</strong></div>
+                                </th>
+                                <th scope="col">
+                                    <div><strong>득실차</strong></div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(league_sub, idx) in league.table" :key="idx">
+                                <td>
+
+                                    <div>
+                                        <span class="champions"
+                                            v-if="idx == 0 || idx == 1"></span><strong>{{ idx + 1 }}
+                                        </strong>
+                                        <span class="europa"
+                                            v-if="idx == 2"></span>
+                                    </div>
+                                </td>
+                                <td class="team">
+                                    <div><img :src="league_sub.team.crest"><strong>{{ league_sub.team.name }}</strong></div>
+                                </td>
+                                <td>
+                                    <div><strong>{{ league_sub.playedGames }}</strong></div>
+                                </td>
+                                <td>
+                                    <div><strong>{{ league_sub.points }}</strong></div>
+                                </td>
+                                <td>
+                                    <div><strong>{{ league_sub.won }}</strong></div>
+                                </td>
+                                <td>
+                                    <div><strong>{{ league_sub.draw }}</strong></div>
+                                </td>
+                                <td>
+                                    <div><strong>{{ league_sub.lost }}</strong></div>
+                                </td>
+                                <td>
+                                    <div><strong>{{ league_sub.goalsFor }}</strong></div>
+                                </td>
+                                <td>
+                                    <div><strong>{{ league_sub.goalsAgainst }}</strong></div>
+                                </td>
+                                <td>
+                                    <div><strong>{{ league_sub.goalDifference }}</strong></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="record_table">
-                    <table v-if="!select_menu">
+                    <table v-if="!select_menu && this.now_league !== 'CL'">
                         <colgroup>
                             <col width="45">
                             <col width="*">
@@ -149,7 +250,7 @@
                         </tbody>
                     </table>
                 </div>
-                    <div v-if="select_menu" class="scorers_board">
+                <div v-if="select_menu" class="scorers_board">
                     <ul v-if="count != 0" class="scorers">
                         <li>
                             <strong class="scorers_title">최다 득점</strong>
@@ -285,8 +386,8 @@
 </template>
 
 <script>
-const season_url = "http://localhost:3000/api/season"
-const scorers_url = "http://localhost:3000/api/scorers"
+const season_url = "http://localhost:3000/home/season"
+const scorers_url = "http://localhost:3000/home/scorers"
 export default {
     data() {
         return {
@@ -297,6 +398,7 @@ export default {
             penalti_data: [],
             league: '',
             league_tab: [
+            {league_name: 'CL', name: '챔피언스리그', url: require('@/assets/cl1.png'), url2: require('@/assets/cl.png')},
             {league_name: 'PD', name: '라리가', url: require('@/assets/pd1.png'), url2: require('@/assets/pd.png')},
             {league_name: 'BL1', name: '분데스리가', url: require('@/assets/bl11.png'), url2: require('@/assets/bl1.png')},
             {league_name: 'SA', name: '세리에A', url: require('@/assets/sa1.png'), url2: require('@/assets/sa.png')},
@@ -318,8 +420,13 @@ export default {
                 .get(season_url ,{params:  {league: this.now_league, season: this.season}})
                 .then((res) => {
                     console.log(this.league_tab)
-                    this.league_data = res.data.standings[0].table;
-                    console.log(res.data)
+                    if(this.now_league === 'CL') {
+                        this.league_data = res.data.standings;
+                        console.log(res.data)
+                    } else {
+                        this.league_data = res.data.standings[0].table;
+                        console.log(res.data)
+                    }
                 })
                 .catch((error) => {
                     console.log(error);
@@ -342,12 +449,6 @@ export default {
                         return b.penalties - a.penalties;
                     })};
                     this.count = res.data.count;
-                    console.log(this.scorers_data)
-                    console.log(this.assists_data)
-                    console.log(this.total_data)
-                    console.log(this.penalti_data)
-                    console.log( this.count)
-                    console.log(res.data)
                 })
                 .catch((error) => {
                     console.log(error);
@@ -375,6 +476,10 @@ export default {
         seasonChange(event) {
             this.season = event.target.value;
             console.log(this.season)
+            if(this.now_league === 'CL') {
+                alert('챔피언스리그는 현재시즌만 제공합니다.')
+                this.season = '2023'
+            } else {
             this.$axios
                 .get(season_url ,{params:  {league: this.now_league, season: this.season}})
                 .then((res) => {
@@ -386,6 +491,7 @@ export default {
                     alert("잠시후 다시시도해 주세요.")
                 })
             this.getScorers()
+            }
         },
         changeData(select) {
             console.log(select)

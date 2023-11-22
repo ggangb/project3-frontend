@@ -81,7 +81,7 @@
         <div class="rank_table2">
           <div class="head">
             <h2>해외축구 순위표</h2>
-            <a class="more"><span>더보기></span></a>
+            <router-link to="/rank"><a class="more"><span>더보기></span></a></router-link>
           </div>
           <div class="table_tab">
             <div class="inner">
@@ -132,7 +132,7 @@
           <div class="home_rank1">
             <div class="head">
               <h2>해외축구 득점 순위</h2>
-              <a class="more"><span>더보기></span></a>
+              <router-link to="/rank"><a class="more"><span>더보기></span></a></router-link>
             </div>
             <div class="table_tab">
               <div class="inner">
@@ -178,12 +178,11 @@
 </template>
 
 <script>
-
-const api_url = "http://localhost:3000/api/news"; //네이버 뉴스 요청
-const trans_url = "http://localhost:3000/api/trans"; //네이버 뉴스 요청
-const table_url = "http://localhost:3000/api/table" //리그 테이블 요청
-const score_url = "http://localhost:3000/api/score" //리그 개인기록 요청
-const newpost = "http://localhost:3000/api/board" //최신글 요청
+const api_url = "http://localhost:3000/home/news"; //네이버 뉴스 요청
+const trans_url = "http://localhost:3000/home/trans"; //네이버 뉴스 요청
+const table_url = "http://localhost:3000/home/table" //리그 테이블 요청
+const score_url = "http://localhost:3000/home/score" //리그 개인기록 요청
+const newpost = "http://localhost:3000/home/board" //최신글 요청
 const anywhere = "https://proxy.cors.sh/"; //네이버 뉴스 cors 에러
 const headers = {
   'x-cors-api-key': 'temp_1827830fbc462df024ee3074f62046cd' //cors 설정 헤더

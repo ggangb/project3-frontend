@@ -1,17 +1,15 @@
 <template>
-	<ckeditor v-model="editorData" :editor="editor" :config="editorConfig" />
+	<ck-editor v-model="editorData" :editor="editor" :config="editorConfig" />
 </template>
 
 <script>
 import CKEditor from '@ckeditor/ckeditor5-vue';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import UploadAdapter from '../service/UploadAdapter';
-
     
 export default {
-    name: 'CKEditor5',
     components: {
-            ckeditor: CKEditor.component
+        'ck-editor': CKEditor.component
     },
     data() {
     return {
@@ -31,6 +29,8 @@ export default {
       }}]
       }
     }
+  },
+  methods: {
   }
     }
 </script>
