@@ -32,7 +32,7 @@
                   <div class="phone_line"  >
                     <div>
                         <span class="material-symbols-outlined">smartphone</span>
-                      <input v-model="phone" class="form_phone" type="text"   placeholder="전화번호" required/>
+                      <input v-model="phone" class="form_phone" type="number"  placeholder="전화번호" required/>
                     </div>
                   </div>
                 </div>
@@ -95,7 +95,7 @@ export default {
   }
   </script>
 
-  <style scoped>
+  <style>
     .form_idpw .id_line, .pw_line, .email_line, .phone_line {
     width: 100%;
     padding: 7px 10px 7px;
@@ -119,5 +119,54 @@ export default {
     width: 450px;
     margin-left: 15px;
 }
+.container {
+  min-height: 650px;
+}
+.content {
+  margin-top: 50px;
+}
+  .login_form {
+    box-sizing: border-box;
+    width: 600px;
+    margin: 0 auto;
+  }
+  .login_img {
+    margin-top: 25px;
+  }
+  .login_img img {
+    height: 62px;
+    display: block;
+    margin: auto;
+  }
+  .pannel {
+    border: 1px solid #c6c6c6;
+    border-radius: 6px;
+    background-color: #fff;
+  }
+  .pannel_inner {
+    padding: 20px 28px;
+  }
+  .pannel_inner h2 {
+    text-align: center;
+    font-size: 35px;
+    margin-bottom: 35px;
+    color: #888;
+  }
+  .login_btn button {
+  display: block;
+    width: 100%;
+    padding: 13px 0 13px;
+    border-radius: 6px;
+    border: solid 1px rgba(0,0,0,.15);
+    background-color: #268ce0;
+    box-sizing: border-box;
+    height: 75px;
+ }
+ .login_btn span {
+  font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    color: #fff;
+ }
   </style>
   

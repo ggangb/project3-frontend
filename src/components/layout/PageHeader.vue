@@ -33,6 +33,9 @@
         <li class="category_item">
           <router-link to="/rank"><span class="category_btn_rank">기록/순위</span></router-link>
         </li>
+        <li class="category_item">
+          <router-link to="/result"><span class="category_btn_rank">일정/결과</span></router-link>
+        </li>
       </ul>
     </div>
   </header>
@@ -116,8 +119,7 @@ a {
   padding-left: 5px;
 }
 .football_nav_sub {
-  height: 60px;
-  border-top: 1px solid white;
+  height: 50px;
 }
 
 

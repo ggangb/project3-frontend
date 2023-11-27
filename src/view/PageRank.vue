@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <div class="record_table"  v-for="(league, idx) in league_data" :key="idx">
-                    <strong v-if="!select_menu">{{ league.group }}</strong>
+                    <div class="record_group_name"><strong class="record_group" v-if="!select_menu">{{ league.group }}</strong></div>
                     <table v-if="!select_menu && this.now_league === 'CL'">
                         <colgroup>
                             <col width="45">
@@ -703,6 +703,14 @@ export default {
 
 .record_table .team {
     text-align: left;
+}
+.record_group {
+    color: #2f6bda;
+    font-weight: bold;
+}
+.record_group_name {
+   margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 .record_table tbody tr {

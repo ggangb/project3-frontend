@@ -50,7 +50,7 @@ const headers = {
     'x-cors-api-key': 'temp_1827830fbc462df024ee3074f62046cd' //cors 설정 헤더
 }
 const cheerio = require('cheerio'); // 크롤링에 사용/
-const api_url = "http://localhost:3000/api/newstab";
+const api_url = "http://localhost:3000/home/newstab";
 export default {
     data() {
         return {

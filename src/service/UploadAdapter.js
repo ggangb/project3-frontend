@@ -14,25 +14,14 @@ export default class UploadAdapter {
 
   // Starts the upload process.
   upload() {
-    var reader  = new FileReader();
-
-    return new Promise( ( resolve, reject ) => {
-        reader.addEventListener( 'load', () => {
-            resolve( { default: reader.result } );
-        });
-
-        reader.addEventListener( 'error', err => {
-            reject( err );
-        });
-
-        reader.addEventListener( 'abort', () => {
-            reject();
-        });                    
-
-        this.loader.file.then( file => {
-            reader.readAsDataURL( file );
-        });                        
-    })
+    
+    return new Promise((resolve, reject) => {
+      this.loader.file.then((file) => {
+        this._initRequest();
+        this._initListeners(resolve, reject, file);
+        this._sendRequest(file);
+      });
+    });
   }
 
   // Aborts the upload process.

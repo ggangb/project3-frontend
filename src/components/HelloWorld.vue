@@ -53,21 +53,26 @@
             <router-link to="/community"><a class="more"><span>더보기></span></a></router-link>
           </div>
           <table>
+            <colgroup>
+                  <col width="80">
+                  <col width="10">
+                  <col width="10">
+            </colgroup>
             <thead>
               <tr>
-                <th><span>작성일</span></th>
-                <th><span>제목</span></th>
-                <th><span>작성자</span></th>
+                <th scope="col"><span>제목</span></th>
+                <th scope="col"><span>작성일</span></th>
+                <th scope="col"><span>작성자</span></th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(newPosts, idx) in newPost.slice(0, 6)" :key="idx">
-                <td><span>{{ newPosts.date }}</span></td>
+                <td><router-link :to="`community/${newPosts.idx}`"><span>{{ newPosts.title }}</span></router-link></td>
                 <td>
                   <div class="wrap">
                     <div class="info">
-                      <router-link :to="`community/${newPosts.idx}`"> <span class="name">{{ newPosts.title
-                      }}</span></router-link>
+                      <span class="name">{{ newPosts.date
+                      }}</span>
                     </div>
                   </div>
                 </td>
@@ -567,12 +572,9 @@ a:hover {
   width: 610px;
 }
 
-.trans_post {
-  height: 487px;
-}
 
 .home_community {
-  margin-top: 12px;
+  margin-top: 17px;
   height: 296px;
 }
 
