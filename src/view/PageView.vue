@@ -33,7 +33,7 @@
         </div>
         <div class="board_edit">
             <router-link v-if="content.username === username" class="update" :to="`/community/update/${this.contentId}`">수정</router-link>
-            <a v-on:click="boardDelete(this.postId)" class="delete">삭제</a>
+            <a v-if="content.username === username" v-on:click="boardDelete(this.postId)" class="delete">삭제</a>
         </div>
         <div class="comment">
             <div class="comment_info">

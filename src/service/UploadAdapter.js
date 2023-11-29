@@ -57,7 +57,7 @@ export default class UploadAdapter {
       }
 
       resolve({
-        default: response.url,
+        default: response.url
       });
     });
 
@@ -77,6 +77,7 @@ export default class UploadAdapter {
     const data = new FormData();
 
 	// 이미지 파일
+  console.log(file);
     data.append("upload", file);
     // 파라미터
     data.append("use_orgin_name", "N");

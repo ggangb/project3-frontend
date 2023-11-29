@@ -220,7 +220,7 @@
                                     </div>
                                 </td>
                                 <td class="team">
-                                    <div><img :src="league.team.crest"><strong>{{ league.team.name }}</strong></div>
+                                    <div><img :src="league.team.crest"/><strong>{{ league.team.name }}</strong></div>
                                 </td>
                                 <td>
                                     <div><strong>{{ league.playedGames }}</strong></div>
@@ -416,6 +416,7 @@ export default {
     },
     methods: {
         getLeague() {
+            console.log('getLeague 메소드 실행')
                 this.$axios
                 .get(season_url ,{params:  {league: this.now_league, season: this.season}})
                 .then((res) => {
@@ -424,6 +425,7 @@ export default {
                         this.league_data = res.data.standings;
                         console.log(res.data)
                     } else {
+                        
                         this.league_data = res.data.standings[0].table;
                         console.log(res.data)
                     }
