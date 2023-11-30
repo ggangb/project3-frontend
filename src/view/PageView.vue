@@ -52,7 +52,7 @@
                             <span class="writer">{{ contents.writer }}</span>
                             <span class="date"> {{ contents.date }}</span>
                             <span class="edit" v-if="contents.writer === username && contents.deleteYn === 'N'" v-on:click="showUpdateModal(idx, contents)">수정</span>
-                            <span class="edit" v-if="contents.deleteYn === 'N'" v-on:click="deleteComment(contents.id)">삭제</span>
+                            <span class="edit" v-if="contents.writer === username && contents.deleteYn === 'N'" v-on:click="deleteComment(contents.id)">삭제</span>
                             <span class="edit" v-if="contents.deleteYn === 'N'" v-on:click="showModal(idx)">답글</span>
                         </div>
                         <div class="upment_content">
@@ -118,7 +118,6 @@ export default {
             page: {
                 page: 0,
                 size: 10,
-                sort: 'ref,desc'
             },
         }
     },
@@ -149,6 +148,7 @@ export default {
                     boardService.getComment(this.page, this.postId).then(
                         (response) => {
                             console.log(response)
+                            console.log(response.page)
                             this.comment = response.data.content;
                             this.totalPages = response.data.totalPages;
                             this.page.page = response.data.number;

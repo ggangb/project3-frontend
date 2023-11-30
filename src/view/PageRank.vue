@@ -67,9 +67,9 @@
                         </select>
                     </div>
                 </div>
-                <div class="record_table"  v-for="(league, idx) in league_data" :key="idx">
+                <div class="record_table" v-if="!select_menu && this.now_league === 'CL'" >
                     <div class="record_group_name"><strong class="record_group" v-if="!select_menu">{{ league.group }}</strong></div>
-                    <table v-if="!select_menu && this.now_league === 'CL'">
+                    <table v-for="(league, idx) in league_data" :key="idx">
                         <colgroup>
                             <col width="45">
                             <col width="*">
@@ -159,8 +159,8 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="record_table">
-                    <table v-if="!select_menu && this.now_league !== 'CL'">
+                <div v-if="!select_menu && this.now_league !== 'CL'" class="record_table">
+                    <table>
                         <colgroup>
                             <col width="45">
                             <col width="*">
@@ -416,6 +416,7 @@ export default {
     },
     methods: {
         getLeague() {
+            this.league_data = [];
             console.log('getLeague 메소드 실행')
                 this.$axios
                 .get(season_url ,{params:  {league: this.now_league, season: this.season}})
@@ -424,8 +425,7 @@ export default {
                     if(this.now_league === 'CL') {
                         this.league_data = res.data.standings;
                         console.log(res.data)
-                    } else {
-                        
+                    } else {             
                         this.league_data = res.data.standings[0].table;
                         console.log(res.data)
                     }
