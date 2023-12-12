@@ -228,6 +228,7 @@ export default {
         )
         .then((res) => {
           this.post = res.data.items;
+          console.log(res)
           this.newsData = this.post.map(data => ({ //받아온 데이터의 뉴스 이미지를 위해 img라는 key를 추가
             ...data, img: ''
           }))

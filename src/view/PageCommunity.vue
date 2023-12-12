@@ -12,13 +12,13 @@
                                 <ul class="best_left">
                                     <li v-for="(rank, idx) in rankData.slice(0,5)" :key="idx" >
                                         <span></span>
-                                        <router-link :to="`community/${rank.idx}`">{{ rank.title }}</router-link>
+                                        <router-link :to="`community/${rank.idx}`">[ 추천 : {{ rank.recommend }} ] "{{ rank.title }}</router-link>
                                     </li>
                                 </ul>
                                 <ul class="best_right">
                                     <li v-for="(rank, idx) in rankData.slice(5,10)" :key="idx" >
                                         <span></span>
-                                        <router-link :to="`community/${rank.idx}`">{{ rank.title }}</router-link>
+                                        <router-link :to="`community/${rank.idx}`">[ 추천 : {{ rank.recommend }} ] "{{ rank.title }}</router-link>
                                     </li>
                                 </ul>
                             </div>
@@ -27,7 +27,51 @@
                 </div>
                 <div class="board_form">
                     <div class="board_content">
-                        <h1 class="tab">게시판</h1>
+                        <router-link to="/community"><h1 class="tab">커뮤니티</h1></router-link>
+                        <div class="tab_category">
+                            <ul class="category_list">
+                                <li class="category_item">
+                                    <a>프리미어리그</a>
+                                    <div class="new_tab">
+                                    <ul class="new_category_list">
+                                        <li class="new_category_item">맨유</li>
+                                        <li class="new_category_item">맨시티</li>
+                                        <li class="new_category_item">토트넘</li>
+                                        <li class="new_category_item">아스날</li>
+                                    </ul>
+                                    </div>
+                                </li>
+                                
+                                <li class="category_item">
+                                    <a>라리가</a>
+                                    <div class="new_tab">
+                                    <ul class="new_category_list">
+                                        <li class="new_category_item">레알 마드리드</li>
+                                        <li class="new_category_item">바르셀로나</li>
+                                        <li class="new_category_item">아틀레티코 마드리드</li>
+                                    </ul>
+                                </div>
+                                </li>
+                                
+                                <li class="category_item">
+                                    <a>세리에</a>
+                                    <div class="new_tab">
+                                    <ul class="new_category_list">
+                                        <li class="new_category_item">AC밀란</li>
+                                        <li class="new_category_item">인터밀란</li>
+                                        <li class="new_category_item">유벤투스</li>
+                                        <li class="new_category_item">나폴리</li>
+                                        <li class="new_category_item">AS로마</li>
+                                    </ul>
+                                    </div>
+                                </li>
+                                <li class="category_item">분데스리가</li>
+                                <li class="category_item">리그앙</li>
+                                <li class="category_item">정보/SNS</li>
+                                <li class="category_item">칼럼</li>
+                            </ul>
+                        </div>
+                           
                         <select @change="onSortChange($event)">
                             <option value="" disabled selected>정렬 기준</option>
                             <option v-for="(header, index) in headerList" :value="contentKeyList[index]" :key="'select-' + index">{{ headerList[index] }}</option>
@@ -73,6 +117,11 @@
 
                             </tbody>
                         </table>
+                        <form>
+                        <div class="search">
+                        <input class="search_input" type="text" /><button class="search_btn"></button>
+                        </div>
+                        </form>
                         <PageNation :currentPage="page.page" :totalPages="totalPages" :pageChange="onPageChange" />
                     </div>
                 </div>
@@ -181,8 +230,8 @@ table {
     border-collapse: none;
 }
 .tab {
-    margin-left: 15px;
     margin-bottom: 15px;
+    font-size: 20px;
 }
 .board_list tr {
     background-color: #f7f7f7;
@@ -249,6 +298,56 @@ table {
     top: 10px;
 }
 
+.tab_category {
+    background-color: #f7f7f7;
+    margin-bottom: 15px;
+    text-align: center;
+    display: block;
+}
+.category_list {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.category_item {
+    padding: 10px;
+    float: left;
+}
+
+.new_tab {
+    display: none;
+
+}
+.category_item :hover + .new_tab{
+    font-size: 10px;
+    display: block;
+    position: absolute;
+    background: #f7f7f7;;
+    border: 1px solid #999;
+    border-radius: 5px;
+    white-space: nowrap;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.2);
+}
+.new_tab:hover {
+    font-size: 10px;
+    display: block;
+    position: absolute;
+    background: #f7f7f7;;
+    border: 1px solid #999;
+    border-radius: 5px;
+    white-space: nowrap;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.2);
+}
+
+.new_category_item:hover {
+    font-weight: bold;
+}
+.new_category_item {
+    padding: 10px;
+    display: inline-block;
+}
 
 
 .board_form {
@@ -291,5 +390,27 @@ tbody tr td.desc {
     overflow: hidden;
     padding-left: 10px;
     text-align: left;
-}</style>
+}
+
+.search {
+    position: relative;
+    width: 310px;
+    border: 1px solid;
+}
+.search_btn {
+    vertical-align :middle;
+    width: 30px;
+    height: 25px;
+    float: right;
+    border: 0px;
+    outline: none;
+    background: url("@/assets/search_FILL0_wght400_GRAD0_opsz24.png") no-repeat;
+}
+.search_input {
+    height: 25px;
+    border: none;
+    width: 270px;
+    outline: none;
+}
+</style>
   
