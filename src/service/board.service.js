@@ -41,6 +41,9 @@ class BoardService {
     deleteComment(postId) {
         return api.put(`/deletecomment/${postId}`)
     }
+    getTab() {
+        return api.get('/gettab')
+    }
    
 }
 

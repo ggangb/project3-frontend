@@ -6,6 +6,16 @@
     <div>
       <form v-on:submit.prevent="write" class="write_form">
         <div class="title">
+          <select class="select_tab" v-model="selectedTab">
+            <optgroup v-for="tabs in tabList" :label="tabs.name" :key="tabs.id">
+              <option :value="[tabs]" :key="tabs.id">
+                {{ tabs.name }}({{ tabs.count }})
+              </option>
+              <option v-for="subTabs in tabs.subCategories" :value="[tabs,subTabs]" :key="subTabs.id">
+                {{ subTabs.name }}({{ subTabs.count }})
+              </option>
+            </optgroup>
+          </select>
           <input v-model="title" class="write_title" type="text" placeholder="제목" required>
         </div>
         <div class="">
@@ -35,7 +45,9 @@ export default {
     return {
       title: '',
       username: '',
-      date: ''
+      selectedTab: [],
+      date: '',
+      tabList: [],
     }
   },
   methods: {
@@ -53,13 +65,40 @@ export default {
       var minutes = ('0' + today.getMinutes()).slice(-2);
 
       var dateString = year + '-' + month + '-' + day + " " + hours + ":" + minutes;
-      
-      const writeData = {
+      console.log(this.selectedTab)
+      if(this.selectedTab.length === 1) {
+        const writeData = {
         title: this.title,
         content: this.editorData,
         username: tokenService.getUserName(),
-        date: dateString
+        date: dateString,
+        categories : {
+          id : this.selectedTab[0].id,
+          name: this.selectedTab[0].name
+        }
       }
+        console.log(writeData)
+        BoardService.writeSubmit(writeData)
+        .then(res => {
+          console.log(res)
+          if(res.status === 200) {
+            alert('글 작성 완료')
+            this.$router.push("/community");
+          }
+        })
+      } else {
+        const writeData = {
+        title: this.title,
+        content: this.editorData,
+        username: tokenService.getUserName(),
+        date: dateString,
+        categories : {
+          id : this.selectedTab[1].id,
+          name: this.selectedTab[1].name,
+          categories: this.selectedTab[0]
+        }
+      }
+       
       console.log(writeData)
       BoardService.writeSubmit(writeData)
       .then(res => {
@@ -69,8 +108,22 @@ export default {
           this.$router.push("/community");
         }
       })
+      }
+
+     
+    },
+    getTab() {
+      BoardService.getTab()
+    .then(res => {
+      console.log(res)
+      this.tabList = res.data;
+      
+    })
     }
   },
+  created() {
+   this.getTab();
+  }
 
 }
 
@@ -92,14 +145,15 @@ export default {
 
 .title {
   padding: 15px;
+  width: 970px;
 }
 
 .write_title {
-  width: 900px;
+  width: 840px;
   height: 20px;
   font-size: 15px;
   display: block;
-  margin: 0 auto;
+  float: right;
 }
 
 .container {
@@ -116,6 +170,10 @@ export default {
   display: block;
   margin: 0 auto;
   text-align: center;
+}
+.select_tab {
+  height: 25px;
+  width: 120px;
 }
 
 .btn button {

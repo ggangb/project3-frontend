@@ -14,8 +14,8 @@
                   <div class="text">
                     <a class="news_thumb" :href="news.link"><img :src="news.img" /></a>
                     <div class="news_textarea">
-                      <h1 class="news_title"><a :href="news.link" v-text="news.title"></a></h1>
-                      <span class="news_description" v-text="news.description"></span>
+                      <h1 class="news_title"><a :href="news.link" >{{ removeTag(news.title, 'b') }}</a></h1>
+                      <span class="news_description" >{{ removeTag(news.description, 'b') }}</span>
                     </div>
                   </div>
                 </li>
@@ -31,12 +31,12 @@
           <div class="head">
             <h2>이적뉴스</h2>
           </div>
-          <div class="trans_form" v-for="(transnews, idx) in trans" :key="idx">
+          <div class="trans_form" v-for="(transnews, idx) in modifiedTrans" :key="idx">
             <ul>
               <li>
                 <div>
                   <div class="trans_textarea">
-                    <h1 class="trans_title"><a :href="transnews.link" v-text="transnews.title"></a></h1>
+                    <h1 class="trans_title"><a :href="transnews.link">{{removeTag(transnews.title, 'b') }}</a></h1>
                   </div>
                 </div>
               </li>
@@ -200,7 +200,7 @@ export default {
       post: [],
       request: [],
       newsData: [],
-      trans: [],
+      modifiedTrans: [],
       table: [],
       newPost: [],
       score: [],
@@ -243,7 +243,11 @@ export default {
                   var $ = cheerio.load(response[i].data)
                   var result = $('meta[property=\'og:image\']').attr('content')
                   this.newsData[i].img = result
+                  const newsJson = JSON.stringify(this.newsData);
+                  const modifiedNews = newsJson.replace(/&quot;/g, '');
+                  this.newsData = JSON.parse(modifiedNews);
                 }
+
               })
             )
             .catch((error) => {
@@ -396,8 +400,11 @@ export default {
       this.$axios
         .get(trans_url)
         .then((res) => {
-          this.trans = res.data.items;
+          const trans = JSON.stringify(res.data.items);
+          const removeTrans = trans.replace(/&quot;/g, '');
+          this.modifiedTrans = JSON.parse(removeTrans);
           console.log(res.data)
+
         })
         .catch((error) => {
           console.log(error);
@@ -413,9 +420,13 @@ export default {
         .catch((error) => {
           console.log(error);
         })
-    }
+    },
+    removeTag(value, tag) {
+      return value.replace(new RegExp(`<${tag}[^>]*>|</${tag}>`, 'gi'), '');
+    },
   }
   ,
+  
 
   created() {
     this.getData();
