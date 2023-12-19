@@ -10,15 +10,17 @@
                         <div class="best_board_form">
                             <div class="best_board_content">
                                 <ul class="best_left">
-                                    <li v-for="(rank, idx) in rankData.slice(0,5)" :key="idx" >
+                                    <li v-for="(rank, idx) in rankData.slice(0, 5)" :key="idx">
                                         <span></span>
-                                        <router-link :to="`community/${rank.idx}`">[ 추천 : {{ rank.recommend }} ] "{{ rank.title }}</router-link>
+                                        <router-link :to="`community/${rank.idx}`">[ 추천 : {{ rank.recommend }} ] "{{
+                                            rank.title }}</router-link>
                                     </li>
                                 </ul>
                                 <ul class="best_right">
-                                    <li v-for="(rank, idx) in rankData.slice(5,10)" :key="idx" >
+                                    <li v-for="(rank, idx) in rankData.slice(5, 10)" :key="idx">
                                         <span></span>
-                                        <router-link :to="`community/${rank.idx}`">[ 추천 : {{ rank.recommend }} ] "{{ rank.title }}</router-link>
+                                        <router-link :to="`community/${rank.idx}`">[ 추천 : {{ rank.recommend }} ] "{{
+                                            rank.title }}</router-link>
                                     </li>
                                 </ul>
                             </div>
@@ -27,54 +29,28 @@
                 </div>
                 <div class="board_form">
                     <div class="board_content">
-                        <router-link to="/community"><h1 class="tab">커뮤니티</h1></router-link>
+                        <a>
+                            <h1 @click="refreshPage" class="tab">커뮤니티</h1>
+                        </a>
                         <div class="tab_category">
                             <ul class="category_list">
-                                <li class="category_item">
-                                    <a>프리미어리그</a>
-                                    <div class="new_tab">
-                                    <ul class="new_category_list">
-                                        <li class="new_category_item">맨유</li>
-                                        <li class="new_category_item">맨시티</li>
-                                        <li class="new_category_item">토트넘</li>
-                                        <li class="new_category_item">아스날</li>
-                                    </ul>
+                                <li class="category_item" v-for="category in tabList" :key="category.name">
+                                    <a @click="changeCategories(category.id)">{{ category.name }}</a>
+                                    <div v-if="category.subCategories" class="new_tab">
+                                        <ul class="new_category_list">
+                                            <li @click="changeCategories(subCategory.id)" class="new_category_item"
+                                                v-for="subCategory in category.subCategories" :key="subCategory"> {{
+                                                    subCategory.name }}</li>
+                                        </ul>
                                     </div>
                                 </li>
-                                
-                                <li class="category_item">
-                                    <a>라리가</a>
-                                    <div class="new_tab">
-                                    <ul class="new_category_list">
-                                        <li class="new_category_item">레알 마드리드</li>
-                                        <li class="new_category_item">바르셀로나</li>
-                                        <li class="new_category_item">아틀레티코 마드리드</li>
-                                    </ul>
-                                </div>
-                                </li>
-                                
-                                <li class="category_item">
-                                    <a>세리에</a>
-                                    <div class="new_tab">
-                                    <ul class="new_category_list">
-                                        <li class="new_category_item">AC밀란</li>
-                                        <li class="new_category_item">인터밀란</li>
-                                        <li class="new_category_item">유벤투스</li>
-                                        <li class="new_category_item">나폴리</li>
-                                        <li class="new_category_item">AS로마</li>
-                                    </ul>
-                                    </div>
-                                </li>
-                                <li class="category_item">분데스리가</li>
-                                <li class="category_item">리그앙</li>
-                                <li class="category_item">정보/SNS</li>
-                                <li class="category_item">칼럼</li>
                             </ul>
                         </div>
-                           
+
                         <select @change="onSortChange($event)">
                             <option value="" disabled selected>정렬 기준</option>
-                            <option v-for="(header, index) in headerList" :value="contentKeyList[index]" :key="'select-' + index">{{ headerList[index] }}</option>
+                            <option v-for="(header, index) in headerList" :value="contentKeyList[index]"
+                                :key="'select-' + index">{{ headerList[index] }}</option>
                         </select>
                         <select @change="onSortDirectionChange($event)">
                             <option value="" disabled selected>정렬 방향</option>
@@ -104,23 +80,34 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(contents, idx) in content" :key="idx">
-                                    <td>{{ contents.idx }}</td>
-                                    <router-link :to="`community/${contents.idx}`">
-                                        <td class="desc">{{ contents.title }}</td>
-                                    </router-link>
-                                    <td>{{ contents.username }}</td>
-                                    <td>{{ contents.date }}</td>
-                                    <td>{{ contents.view }}</td>
-                                    <td>{{ contents.recommend }}</td>
-                                </tr>
+                                <template v-if="!empty">
+                                    <tr v-for="(contents, idx) in content" :key="idx">
+                                        <td>{{ contents.idx }}</td>
+                                        <router-link :to="`community/${contents.idx}`">
+                                            <td class="desc">{{ contents.title }}</td>
+                                        </router-link>
+                                        <td>{{ contents.username }}</td>
+                                        <td>{{ contents.date }}</td>
+                                        <td>{{ contents.view }}</td>
+                                        <td>{{ contents.recommend }}</td>
+                                    </tr>
+                                </template>
 
+                                <template v-else>
+                                    <tr>
+                                        <td colspan="6">
+                                            <div>
+                                                <h1>해당 탭에 작성된 글이 없습니다.</h1>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </template>
                             </tbody>
                         </table>
                         <form>
-                        <div class="search">
-                        <input class="search_input" type="text" /><button class="search_btn"></button>
-                        </div>
+                            <div class="search">
+                                <input class="search_input" type="text" /><button class="search_btn"></button>
+                            </div>
                         </form>
                         <PageNation :currentPage="page.page" :totalPages="totalPages" :pageChange="onPageChange" />
                     </div>
@@ -141,7 +128,9 @@ export default {
     data() {
         return {
             content: [],
+            empty: false,
             rankData: [],
+            tabList: [],
             headerList: ["날짜", "추천수", "조회수"],
             contentKeyList: ['date', 'recommend', 'view'],
             sortHeader: 'date',
@@ -155,18 +144,38 @@ export default {
         }
     },
     computed: {
-        
+
     },
     methods: {
+        refreshPage() {
+            location.reload();
+        },
         search() {
             console.log('page' + this.page.page)
             boardService.getCoummunityBoard(this.page).then(
-            (response) => {
-                console.log(response)
-                this.content = response.data.content;
-                this.totalPages = response.data.totalPages;
-                this.page.page = response.data.number;
-            })
+                (response) => {
+                    console.log(response)
+                    this.content = response.data.content;
+                    this.totalPages = response.data.totalPages;
+                    this.page.page = response.data.number;
+                })
+        },
+        changeCategories(categories) {
+            console.log(categories)
+            boardService.getchangeContent(this.page, categories).then(
+                (res) => {
+                    console.log(res);
+                    if (res.data === '') {
+                        this.empty = true;
+                    } else {
+                        this.empty = false;
+                        this.content = res.data.content;
+                        this.totalPages = res.data.totalPages;
+                        this.page.page = res.data.number;
+                    }
+                }
+            )
+
         },
         onPageChange(value) {
             console.log(value)
@@ -182,11 +191,19 @@ export default {
             this.sortDirection = event.target.value;
             this.page.sort = this.sortHeader + ',' + this.sortDirection;
             this.search();
+        },
+        getTab() {
+            boardService.getTab()
+                .then(res => {
+                    console.log(res)
+                    this.tabList = res.data;
+
+                })
         }
 
     },
     created() {
-       
+
         boardService.getRank().then(
             (response => {
                 console.log(response)
@@ -212,7 +229,8 @@ export default {
                     this.$router.push('/');
                 }
             }
-        )
+        ),
+            this.getTab();
     },
 
 }
@@ -223,16 +241,20 @@ a {
     text-decoration: none;
     color: black;
 }
+
 a:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
+
 table {
     border-collapse: none;
 }
+
 .tab {
     margin-bottom: 15px;
     font-size: 20px;
 }
+
 .board_list tr {
     background-color: #f7f7f7;
 }
@@ -304,6 +326,7 @@ table {
     text-align: center;
     display: block;
 }
+
 .category_list {
     list-style: none;
     display: flex;
@@ -320,30 +343,35 @@ table {
     display: none;
 
 }
-.category_item :hover + .new_tab{
+
+.category_item :hover+.new_tab {
     font-size: 10px;
     display: block;
     position: absolute;
-    background: #f7f7f7;;
+    background: #f7f7f7;
+    ;
     border: 1px solid #999;
     border-radius: 5px;
     white-space: nowrap;
-    box-shadow: 1px 1px 3px rgba(0,0,0,.2);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, .2);
 }
+
 .new_tab:hover {
     font-size: 10px;
     display: block;
     position: absolute;
-    background: #f7f7f7;;
+    background: #f7f7f7;
+    ;
     border: 1px solid #999;
     border-radius: 5px;
     white-space: nowrap;
-    box-shadow: 1px 1px 3px rgba(0,0,0,.2);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, .2);
 }
 
 .new_category_item:hover {
     font-weight: bold;
 }
+
 .new_category_item {
     padding: 10px;
     display: inline-block;
@@ -397,8 +425,9 @@ tbody tr td.desc {
     width: 310px;
     border: 1px solid;
 }
+
 .search_btn {
-    vertical-align :middle;
+    vertical-align: middle;
     width: 30px;
     height: 25px;
     float: right;
@@ -406,6 +435,7 @@ tbody tr td.desc {
     outline: none;
     background: url("@/assets/search_FILL0_wght400_GRAD0_opsz24.png") no-repeat;
 }
+
 .search_input {
     height: 25px;
     border: none;

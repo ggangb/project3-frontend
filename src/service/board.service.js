@@ -6,6 +6,10 @@ class BoardService {
         console.log(pageable)
         return api.get('/board', { params: pageable});
     }
+    getchangeContent(pageable, categories) {
+        console.log(pageable)
+        return api.get(`/changetab/${categories}`, { params : pageable})
+    }
 
     writeSubmit(writeData) {
         return api.post('/board', writeData)

@@ -95,7 +95,7 @@ export default {
         categories : {
           id : this.selectedTab[1].id,
           name: this.selectedTab[1].name,
-          categories: this.selectedTab[0]
+          parentId: this.selectedTab[0].id
         }
       }
        
