@@ -29,7 +29,7 @@
                 </div>
                 <div class="board_form">
                     <div class="board_content">
-                        <a>
+                        <a class="board_tab">
                             <h1 @click="refreshPage" class="tab">커뮤니티</h1>
                         </a>
                         <div class="tab_category">
@@ -38,7 +38,7 @@
                                     <a @click="changeCategories(category.id)">{{ category.name }}</a>
                                     <div v-if="category.subCategories" class="new_tab">
                                         <ul class="new_category_list">
-                                            <li @click="changeCategories(subCategory.id)" class="new_category_item"
+                                            <li @click="changeCategories(category.id,subCategory.id)" class="new_category_item"
                                                 v-for="subCategory in category.subCategories" :key="subCategory"> {{
                                                     subCategory.name }}</li>
                                         </ul>
@@ -57,7 +57,7 @@
                             <option value="desc">내림차순</option>
                             <option value="asc">오름차순</option>
                         </select>
-                        <router-link to="/community/write">
+                        <router-link :to="{ name:'PageWrite' , state: { tab: categoriesId, subTab: subCategoriesId}}">
                             <div class="btn"><button>글쓰기</button></div>
                         </router-link>
                         <table class="board_list">
@@ -83,7 +83,7 @@
                                 <template v-if="!empty">
                                     <tr v-for="(contents, idx) in content" :key="idx">
                                         <td>{{ contents.idx }}</td>
-                                        <router-link :to="`community/${contents.idx}`">
+                                        <router-link :to="`view/${contents.idx}`">
                                             <td class="desc">{{ contents.title }}</td>
                                         </router-link>
                                         <td>{{ contents.username }}</td>
@@ -128,6 +128,8 @@ export default {
     data() {
         return {
             content: [],
+            categoriesId : '',
+            subCategoriesId: '',
             empty: false,
             rankData: [],
             tabList: [],
@@ -160,9 +162,13 @@ export default {
                     this.page.page = response.data.number;
                 })
         },
-        changeCategories(categories) {
-            console.log(categories)
-            boardService.getchangeContent(this.page, categories).then(
+        changeCategories(categories,subCategories) {
+            this.categoriesId = categories;
+            this.subCategoriesId = subCategories;
+            console.log(this.categoriesId)
+            console.log(this.subCategoriesId)
+            if(categories && !subCategories) {
+                boardService.getchangeContent(this.page, categories).then(
                 (res) => {
                     console.log(res);
                     if (res.data === '') {
@@ -175,6 +181,23 @@ export default {
                     }
                 }
             )
+            } else if(categories && subCategories) {
+                boardService.getchangeContent(this.page, subCategories).then(
+                (res) => {
+                    console.log(res);
+                    if (res.data === '') {
+                        this.empty = true;
+                    } else {
+                        this.empty = false;
+                        this.content = res.data.content;
+                        this.totalPages = res.data.totalPages;
+                        this.page.page = res.data.number;
+                    }
+                }
+            )
+            }
+           
+
 
         },
         onPageChange(value) {
@@ -377,6 +400,9 @@ table {
     display: inline-block;
 }
 
+.board_tab {
+    display: inline-block;
+}
 
 .board_form {
     position: relative;

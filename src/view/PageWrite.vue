@@ -7,11 +7,12 @@
       <form v-on:submit.prevent="write" class="write_form">
         <div class="title">
           <select class="select_tab" v-model="selectedTab">
+            <option value="default">탭 선택</option>
             <optgroup v-for="tabs in tabList" :label="tabs.name" :key="tabs.id">
-              <option :value="[tabs]" :key="tabs.id">
+              <option :value="tabs.id" :key="tabs.id">
                 {{ tabs.name }}({{ tabs.count }})
               </option>
-              <option v-for="subTabs in tabs.subCategories" :value="[tabs,subTabs]" :key="subTabs.id">
+              <option v-for="subTabs in tabs.subCategories" :value="[tabs.id, subTabs.id]" :key="subTabs.id">
                 {{ subTabs.name }}({{ subTabs.count }})
               </option>
             </optgroup>
@@ -19,7 +20,7 @@
           <input v-model="title" class="write_title" type="text" placeholder="제목" required>
         </div>
         <div class="">
-          <CKEditor5 v-model="editorData"/>
+          <CKEditor5 v-model="editorData" />
 
         </div>
         <div class="btn">
@@ -45,14 +46,16 @@ export default {
     return {
       title: '',
       username: '',
-      selectedTab: [],
+      selectedTab: 'default',
+      tab: null,
+      subTab: null,
       date: '',
       tabList: [],
     }
   },
   methods: {
     write() {
-      if(this.editorData === '') {
+      if (this.editorData === '') {
         alert('내용을 입력하세요.');
         return
       }
@@ -66,63 +69,68 @@ export default {
 
       var dateString = year + '-' + month + '-' + day + " " + hours + ":" + minutes;
       console.log(this.selectedTab)
-      if(this.selectedTab.length === 1) {
+      if (this.selectedTab.length === 1) {
         const writeData = {
-        title: this.title,
-        content: this.editorData,
-        username: tokenService.getUserName(),
-        date: dateString,
-        categories : {
-          id : this.selectedTab[0].id,
-          name: this.selectedTab[0].name
+          title: this.title,
+          content: this.editorData,
+          username: tokenService.getUserName(),
+          date: dateString,
+          categories: {
+            id: this.selectedTab[0]
+          }
         }
-      }
         console.log(writeData)
         BoardService.writeSubmit(writeData)
-        .then(res => {
-          console.log(res)
-          if(res.status === 200) {
-            alert('글 작성 완료')
-            this.$router.push("/community");
-          }
-        })
+          .then(res => {
+            console.log(res)
+            if (res.status === 200) {
+              alert('글 작성 완료')
+              this.$router.push("/community");
+            }
+          })
       } else {
         const writeData = {
-        title: this.title,
-        content: this.editorData,
-        username: tokenService.getUserName(),
-        date: dateString,
-        categories : {
-          id : this.selectedTab[1].id,
-          name: this.selectedTab[1].name,
-          parentId: this.selectedTab[0].id
+          title: this.title,
+          content: this.editorData,
+          username: tokenService.getUserName(),
+          date: dateString,
+          categories: {
+            id: this.selectedTab[1],
+            parentId: this.selectedTab[0]
+          }
         }
-      }
-       
-      console.log(writeData)
-      BoardService.writeSubmit(writeData)
-      .then(res => {
-        console.log(res)
-        if(res.status === 200) {
-          alert('글 작성 완료')
-          this.$router.push("/community");
-        }
-      })
+
+        console.log(writeData)
+        BoardService.writeSubmit(writeData)
+          .then(res => {
+            console.log(res)
+            if (res.status === 200) {
+              alert('글 작성 완료')
+              this.$router.push("/community");
+            }
+          })
       }
 
-     
+
     },
     getTab() {
       BoardService.getTab()
-    .then(res => {
-      console.log(res)
-      this.tabList = res.data;
-      
-    })
+        .then(res => {
+          console.log(res)
+          this.tabList = res.data;
+
+        })
     }
   },
   created() {
-   this.getTab();
+    this.getTab();
+    this.tab = history.state.tab;
+    this.subTab = history.state.subTab;
+    console.log(this.tab);
+    console.log( this.subTab);
+    if (this.tab && this.subTab) {
+      this.selectedTab = [this.tab, this.subTab];
+    }
   }
 
 }
@@ -171,6 +179,7 @@ export default {
   margin: 0 auto;
   text-align: center;
 }
+
 .select_tab {
   height: 25px;
   width: 120px;
@@ -180,5 +189,6 @@ export default {
   width: 100px;
   height: 30px;
   margin: 20px;
-}</style>
+}
+</style>
   
