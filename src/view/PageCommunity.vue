@@ -83,7 +83,7 @@
                                 <template v-if="!empty">
                                     <tr v-for="(contents, idx) in content" :key="idx">
                                         <td>{{ contents.idx }}</td>
-                                        <router-link :to="`view/${contents.idx}`">
+                                        <router-link :to="{ name:'PageView', params:{contentId: contents.idx}}">
                                             <td class="desc">{{ contents.title }}</td>
                                         </router-link>
                                         <td>{{ contents.username }}</td>

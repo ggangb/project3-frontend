@@ -3,20 +3,31 @@
     <div class="tab">
       <h2>커뮤니티</h2>
     </div>
-    <div>
-      <form v-on:submit.prevent="update" class="write_form">
+    <div class="write_form">
+      <form v-on:submit.prevent="update" >
         <div class="title">
-          <input v-model="this.content.title" class="write_title" type="text" placeholder="제목"  required>
+          <select class="select_tab" v-model="selectedTab">
+            <option value="default">탭 선택</option>
+            <optgroup v-for="tabs in tabList" :label="tabs.name" :key="tabs.id">
+              <option :value="tabs.id" :key="tabs.id">
+                {{ tabs.name }}({{ tabs.count }})
+              </option>
+              <option v-for="subTabs in tabs.subCategories" :value="[tabs.id, subTabs.id]" :key="subTabs.id">
+                {{ subTabs.name }}({{ subTabs.count }})
+              </option>
+            </optgroup>
+          </select>
+          <input v-model="this.content.title" class="write_title" type="text" placeholder="제목" required>
         </div>
         <div class="">
-          <CKEditor5 v-model="this.content.content"  />
+          <CKEditor5 v-model="this.content.content" />
 
         </div>
-        <div class="btn">
-          <router-link to="/community"><button class="cancel">취소</button></router-link>
-          <button type="submit" class="success">수정</button>
-        </div>
       </form>
+      <div class="btn">
+        <button @click="goBack" class="cancel">취소</button>
+        <button type="submit" class="success">수정</button>
+      </div>
     </div>
   </div>
 </template>
@@ -37,6 +48,10 @@ export default {
       editorData: this.editorData,
       username: '',
       date: '',
+      tab: null,
+      subTab: null,
+      selectedTab: 'default',
+      tabList: [],
     }
   },
   methods: {
@@ -49,9 +64,9 @@ export default {
           res => {
             console.log(res)
             if (res.status === 200) {
-                        alert('글 수정 완료')
-                        this.$router.push("/community");
-                    }
+              alert('글 수정 완료')
+              this.$router.push("/community");
+            }
           }
         )
     },
@@ -61,16 +76,42 @@ export default {
         .then(
           res => {
             console.log(res);
-            this.content = res.data; 
+            this.content = res.data;
+            this.tab = res.data.categories.id;
+            if(!res.data.subCategories) {
+              this.subTab = 'dafault';
+            } else {
+              this.subTab = res.data.subCategories.id;
+            }
+            console.log(this.tab)
+            console.log(this.subTab)
+            if (this.tab && this.subTab) {
+              this.selectedTab = [this.tab, this.subTab];
+            } else {
+              this.selectedTab = this.tab;
+            }
           }
         )
+    },
+    goBack() {
+      this.$router.go(-1);
+    },
+    getTab() {
+      boardService.getTab()
+        .then(res => {
+          console.log(res)
+          this.tabList = res.data;
+
+        })
     }
   },
   mounted() {
-        this.getUpdate();
+    this.getUpdate();
+    this.getTab();
 
 
-    },
+
+  },
 }
 
 </script>
@@ -91,14 +132,15 @@ export default {
 
 .title {
   padding: 15px;
+  width: 970px;
 }
 
 .write_title {
-  width: 900px;
+  width: 840px;
   height: 20px;
   font-size: 15px;
   display: block;
-  margin: 0 auto;
+  float: right;
 }
 
 .container {
@@ -117,9 +159,14 @@ export default {
   text-align: center;
 }
 
+.select_tab {
+  height: 25px;
+  width: 120px;
+}
+
 .btn button {
   width: 100px;
   height: 30px;
   margin: 20px;
-}</style>
-  
+}
+</style> 

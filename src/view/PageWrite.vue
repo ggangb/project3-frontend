@@ -3,8 +3,8 @@
     <div class="tab">
       <h2>커뮤니티</h2>
     </div>
-    <div>
-      <form v-on:submit.prevent="write" class="write_form">
+    <div class="write_form">
+      <form v-on:submit.prevent="write" >
         <div class="title">
           <select class="select_tab" v-model="selectedTab">
             <option value="default">탭 선택</option>
@@ -23,11 +23,11 @@
           <CKEditor5 v-model="editorData" />
 
         </div>
-        <div class="btn">
-          <router-link to="/community"><button class="cancel">취소</button></router-link>
-          <button type="submit" class="success">등록</button>
-        </div>
       </form>
+      <div class="btn">
+       <button  @click="goBack" class="cancel">취소</button>
+        <button type="submit" class="success">등록</button>
+      </div>
     </div>
   </div>
 </template>
@@ -37,6 +37,7 @@
 import CKEditor5 from '../components/CKEditor5.vue';
 import BoardService from '../service/board.service';
 import tokenService from '@/service/token.service';
+
 
 export default {
   components: {
@@ -69,14 +70,14 @@ export default {
 
       var dateString = year + '-' + month + '-' + day + " " + hours + ":" + minutes;
       console.log(this.selectedTab)
-      if (this.selectedTab.length === 1) {
+      if (this.selectedTab.length === 0) {
         const writeData = {
           title: this.title,
           content: this.editorData,
           username: tokenService.getUserName(),
           date: dateString,
           categories: {
-            id: this.selectedTab[0]
+            id: this.selectedTab
           }
         }
         console.log(writeData)
@@ -85,7 +86,7 @@ export default {
             console.log(res)
             if (res.status === 200) {
               alert('글 작성 완료')
-              this.$router.push("/community");
+              this.goBack();
             }
           })
       } else {
@@ -106,12 +107,15 @@ export default {
             console.log(res)
             if (res.status === 200) {
               alert('글 작성 완료')
-              this.$router.push("/community");
+              this.goBack();
             }
           })
       }
 
 
+    },
+    goBack() {
+      this.$router.go(-1);
     },
     getTab() {
       BoardService.getTab()
@@ -130,6 +134,11 @@ export default {
     console.log( this.subTab);
     if (this.tab && this.subTab) {
       this.selectedTab = [this.tab, this.subTab];
+    } else if (!this.tab && !this.subTab){
+      this.selectedTab = 'default';
+    } else {
+      this.selectedTab = this.tab;
+      
     }
   }
 

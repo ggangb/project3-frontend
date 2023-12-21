@@ -136,15 +136,12 @@ export default {
             this.contentId = this.$route.params.contentId
             boardService.getContent(this.contentId).then(
                 (res) => {
-                    const cookie = this.$cookies.get('viewCount');
-                    console.log(cookie)
-                    console.log(res)
+                   // const cookie = this.$cookies.get('viewCount');
+
                     this.content = res.data
                     this.prev = res.data.prev;
                     this.next = res.data.next;
                     this.postId = res.data.id;
-                    console.log(this.page)
-                    console.log(this.postId)
                     boardService.getComment(this.page, this.postId).then(
                         (response) => {
                             console.log(response)
@@ -320,7 +317,7 @@ export default {
                 })
         }
     },
-    mounted() {
+    created() {
         // var contentId = this.$route.params.contentId
         // boardService.getContent(contentId).then(
         //     (res) => {

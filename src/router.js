@@ -42,6 +42,7 @@ const routes = [
       {
         path: '/view/:contentId',
         name: 'PageView',
+        props: true,
         component: () => import(/* webpackChunkName: "about" */ './view/PageView.vue'),
       },
       {
