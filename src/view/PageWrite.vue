@@ -26,7 +26,7 @@
       </form>
       <div class="btn">
        <button  @click="goBack" class="cancel">취소</button>
-        <button type="submit" class="success">등록</button>
+        <button @click="write()" class="success">등록</button>
       </div>
     </div>
   </div>
@@ -69,8 +69,8 @@ export default {
       var minutes = ('0' + today.getMinutes()).slice(-2);
 
       var dateString = year + '-' + month + '-' + day + " " + hours + ":" + minutes;
-      console.log(this.selectedTab)
-      if (this.selectedTab.length === 0) {
+      console.log(Array.isArray(this.selectedTab))
+      if (!Array.isArray(this.selectedTab)) {
         const writeData = {
           title: this.title,
           content: this.editorData,

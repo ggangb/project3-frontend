@@ -123,14 +123,25 @@ export default {
     },
     methods: {
         recommendContent() {
-            var contentId = this.$route.params.contentId
-            boardService.recommend(contentId).then(
+            if(tokenService.getUserName() === this.content.username) {
+                alert('자신의 글에는 추천이 불가능 합니다.')
+            } else {
+            const recommend = { 
+                boardId : this.$route.params.contentId,
+                recommendUserIds : [tokenService.getUserName()]
+            }
+            console.log(recommend);
+            boardService.recommend(recommend).then(
                 (res) => {
                     console.log(res);
                     alert('추천완료');
                     this.getContent();
                 }
-            )
+            ).catch((error) => {
+                console.log(error);
+                alert('이미 추천하셨습니다.')
+            })
+        }
         },
         getContent() {
             this.contentId = this.$route.params.contentId

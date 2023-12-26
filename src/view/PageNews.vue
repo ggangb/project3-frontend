@@ -24,8 +24,8 @@
                                 <li v-for="(news, idx) in newsData.slice(0, 10)" :key="idx">
                                     <a class="thumb" :href="news.link"><img :src="news.img" /></a>
                                     <div class="text">
-                                        <a class="news_title" :href="news.link" v-text="news.title"></a>
-                                        <p class="news_content" v-text="news.description"></p>
+                                        <a class="news_title" :href="news.link">{{ removeTag(news.title, 'b') }}</a>
+                                        <p class="news_content" >{{ removeTag(news.description, 'b') }}</p>
                                         <div class="news_date">
                                             <span class="time" v-text="news.pubDate"></span>
                                         </div>
@@ -35,7 +35,7 @@
                         </div>
                         <div class="pageable">
                             <a v-for="(paging, idx) in pages" :key="idx" v-on:click="onPageChange(paging)"
-                                :class="paging  === pageIndex ? 'currentPage' : ''">{{ paging }}</a>
+                                :class="paging === pageIndex ? 'currentPage' : ''">{{ paging }}</a>
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,7 @@ export default {
     data() {
         return {
             newsData: [],
-            pages: [1,2,3,4,5,6,7,8,9,10],
+            pages: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             category: ["프리미어리그", "라리가", "분데스", "세리에", "리그앙", "UEFA"],
             isActive: false,
             index: 0,
@@ -68,7 +68,7 @@ export default {
             if (keyword == null) {
                 console.log(this.search, this.pageIndex)
                 this.$axios
-                    .get(api_url ,{params:  {start: this.pageIndex, keyword: "\"해외축구\""}})
+                    .get(api_url, { params: { start: this.pageIndex, keyword: "\"해외축구\"" } })
                     .then((res) => {
                         this.post = res.data.items;
                         this.newsData = this.post.map(data => ({ //받아온 데이터의 뉴스 이미지를 위해 img라는 key를 추가
@@ -85,6 +85,10 @@ export default {
                                         var $ = cheerio.load(response[i].data)
                                         var result = $('meta[property=\'og:image\']').attr('content')
                                         this.newsData[i].img = result
+                                        const newsJson = JSON.stringify(this.newsData);
+                                        const modifiedNews = newsJson.replace(/&quot;/g, '');
+                                        modifiedNews.replace(new RegExp(`<b[^>]*>|</b>`, 'gi'), '');
+                                        this.newsData = JSON.parse(modifiedNews);
                                     }
                                 })
                             )
@@ -99,7 +103,7 @@ export default {
             } else {
                 console.log(this.search, this.pageIndex)
                 this.$axios
-                    .get(api_url ,{params:  {start: this.pageIndex, keyword: this.search}})
+                    .get(api_url, { params: { start: this.pageIndex, keyword: this.search } })
                     .then((res) => {
                         this.post = res.data.items;
                         this.newsData = this.post.map(data => ({ //받아온 데이터의 뉴스 이미지를 위해 img라는 key를 추가
@@ -115,7 +119,11 @@ export default {
                                     for (var i in response) {
                                         var $ = cheerio.load(response[i].data)
                                         var result = $('meta[property=\'og:image\']').attr('content')
-                                        this.newsData[i].img = result
+                                        this.newsData[i].img = result;
+                                        const newsJson = JSON.stringify(this.newsData);
+                                        const modifiedNews = newsJson.replace(/&quot;/g, '');
+                                        modifiedNews.replace(new RegExp(`<b[^>]*>|</b>`, 'gi'), '');
+                                        this.newsData = JSON.parse(modifiedNews);
                                     }
                                 })
                             )
@@ -146,11 +154,14 @@ export default {
 
         },
         onPageChange(val) {
-        this.pageIndex = val;
-        this.getData(this.search, this.pageIndex);
+            this.pageIndex = val;
+            this.getData(this.search, this.pageIndex);
+        },
+        removeTag(value, tag) {
+          return value.replace(new RegExp(`<${tag}[^>]*>|</${tag}>`, 'gi'), '');
+        },
     },
-    },
-    
+
     created() {
         this.getData();
     }
@@ -260,6 +271,7 @@ export default {
     margin: -1px 8px 1px 4px;
     vertical-align: middle;
 }
+
 .pageable {
     padding: 25px 0;
     text-align: center;
@@ -272,18 +284,21 @@ export default {
     padding: 0 5px;
     border: 1px solid #fff;
     color: #666;
-    font-family: Arial,sans-serif;
+    font-family: Arial, sans-serif;
     font-size: 14px;
     line-height: 26px;
     vertical-align: top;
     text-decoration: none;
 }
+
 .active {
     color: #255fbe !important;
 }
+
 .currentPage {
     color: #255fbe !important;
-    border-color: #9fbaec !important;;
+    border-color: #9fbaec !important;
+    ;
     font-weight: bold;
 }
 </style>

@@ -35,6 +35,7 @@ export default {
 
 <style>
 
+
 #footer {
   background: #f2f4f7;
 }

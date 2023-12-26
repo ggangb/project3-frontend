@@ -26,7 +26,7 @@
       </form>
       <div class="btn">
         <button @click="goBack" class="cancel">취소</button>
-        <button type="submit" class="success">수정</button>
+        <button @click="update()" class="success">수정</button>
       </div>
     </div>
   </div>
@@ -78,18 +78,15 @@ export default {
             console.log(res);
             this.content = res.data;
             this.tab = res.data.categories.id;
+            console.log(this.tab)
             if(!res.data.subCategories) {
-              this.subTab = 'dafault';
+              this.selectedTab = this.tab;
             } else {
               this.subTab = res.data.subCategories.id;
+              this.selectedTab = [this.tab, this.subTab];
             }
             console.log(this.tab)
             console.log(this.subTab)
-            if (this.tab && this.subTab) {
-              this.selectedTab = [this.tab, this.subTab];
-            } else {
-              this.selectedTab = this.tab;
-            }
           }
         )
     },

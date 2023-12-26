@@ -21,8 +21,8 @@ class BoardService {
     getRank() {
         return api.get('/getrank')
     }
-    recommend(idx) {
-        return api.get(`/recommend/${idx}`)
+    recommend(recommend) {
+        return api.post('/recommend', recommend)
     }
     upmentSubmit(upmentData) {
         return api.post('/comment', upmentData)
@@ -48,7 +48,9 @@ class BoardService {
     getTab() {
         return api.get('/gettab')
     }
-   
+    searchContent(pageable, searchData) {
+        return api.get('/searchcontent', { params: searchData})
+    }
 }
 
 export default new BoardService();

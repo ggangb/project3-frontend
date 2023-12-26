@@ -34,19 +34,23 @@
                         </a>
                         <div class="tab_category">
                             <ul class="category_list">
+                                <li @click="refreshPage"><span class="material-symbols-outlined">
+                                        house
+                                    </span></li>
                                 <li class="category_item" v-for="category in tabList" :key="category.name">
                                     <a @click="changeCategories(category.id)">{{ category.name }}</a>
                                     <div v-if="category.subCategories" class="new_tab">
                                         <ul class="new_category_list">
-                                            <li @click="changeCategories(category.id,subCategory.id)" class="new_category_item"
-                                                v-for="subCategory in category.subCategories" :key="subCategory"> {{
+                                            <li @click="changeCategories(category.id, subCategory.id)"
+                                                class="new_category_item" v-for="subCategory in category.subCategories"
+                                                :key="subCategory"> {{
                                                     subCategory.name }}</li>
                                         </ul>
                                     </div>
                                 </li>
                             </ul>
                         </div>
-
+                        <!-- 
                         <select @change="onSortChange($event)">
                             <option value="" disabled selected>정렬 기준</option>
                             <option v-for="(header, index) in headerList" :value="contentKeyList[index]"
@@ -56,8 +60,8 @@
                             <option value="" disabled selected>정렬 방향</option>
                             <option value="desc">내림차순</option>
                             <option value="asc">오름차순</option>
-                        </select>
-                        <router-link :to="{ name:'PageWrite' , state: { tab: categoriesId, subTab: subCategoriesId}}">
+                        </select> -->
+                        <router-link :to="{ name: 'PageWrite', state: { tab: categoriesId, subTab: subCategoriesId } }">
                             <div class="btn"><button>글쓰기</button></div>
                         </router-link>
                         <table class="board_list">
@@ -83,7 +87,7 @@
                                 <template v-if="!empty">
                                     <tr v-for="(contents, idx) in content" :key="idx">
                                         <td>{{ contents.idx }}</td>
-                                        <router-link :to="{ name:'PageView', params:{contentId: contents.idx}}">
+                                        <router-link :to="{ name: 'PageView', params: { contentId: contents.idx } }">
                                             <td class="desc">{{ contents.title }}</td>
                                         </router-link>
                                         <td>{{ contents.username }}</td>
@@ -104,9 +108,19 @@
                                 </template>
                             </tbody>
                         </table>
-                        <form>
+                        <form v-on:submit.prevent="searchData">
                             <div class="search">
-                                <input class="search_input" type="text" /><button class="search_btn"></button>
+                                <div class="input-wrapper">
+                                    <input class="search_input" type="text" v-model="searchKeyword" />
+                                    <button class="search_btn"></button>
+                                </div>
+                                <select class="search_select" name="search_option" v-model="searchType">
+                                    <option value="title_content">제목+내용</option>
+                                    <option value="title">제목</option>
+                                    <option value="content">내용</option>
+                                    <option value="username">작성자</option>
+                                    <option value="comment">댓글내용</option>
+                                </select>
                             </div>
                         </form>
                         <PageNation :currentPage="page.page" :totalPages="totalPages" :pageChange="onPageChange" />
@@ -128,11 +142,13 @@ export default {
     data() {
         return {
             content: [],
-            categoriesId : '',
+            categoriesId: '',
             subCategoriesId: '',
             empty: false,
             rankData: [],
             tabList: [],
+            searchType: 'title_content',
+            searchKeyword: '',
             headerList: ["날짜", "추천수", "조회수"],
             contentKeyList: ['date', 'recommend', 'view'],
             sortHeader: 'date',
@@ -150,7 +166,12 @@ export default {
     },
     methods: {
         refreshPage() {
-            location.reload();
+            this.page = {
+                page: 0,
+                size: 5,
+                sort: 'date,desc'
+            }
+            this.search();
         },
         search() {
             console.log('page' + this.page.page)
@@ -162,41 +183,57 @@ export default {
                     this.page.page = response.data.number;
                 })
         },
-        changeCategories(categories,subCategories) {
+        searchData() {
+            const searchData = {
+                type : this.searchType,
+                keyword : this.searchKeyword
+            }
+            console.log(searchData)
+            boardService.searchContent(this.page,searchData).then(
+                (res) => {
+                    console.log(res);
+                    this.content = res.data.content;
+                    this.totalPages = res.data.totalPages;
+                    this.page.page = res.data.number;
+                }
+            )
+            
+        },
+        changeCategories(categories, subCategories) {
             this.categoriesId = categories;
             this.subCategoriesId = subCategories;
             console.log(this.categoriesId)
             console.log(this.subCategoriesId)
-            if(categories && !subCategories) {
+            if (categories && !subCategories) {
                 boardService.getchangeContent(this.page, categories).then(
-                (res) => {
-                    console.log(res);
-                    if (res.data === '') {
-                        this.empty = true;
-                    } else {
-                        this.empty = false;
-                        this.content = res.data.content;
-                        this.totalPages = res.data.totalPages;
-                        this.page.page = res.data.number;
+                    (res) => {
+                        console.log(res);
+                        if (res.data === '') {
+                            this.empty = true;
+                        } else {
+                            this.empty = false;
+                            this.content = res.data.content;
+                            this.totalPages = res.data.totalPages;
+                            this.page.page = res.data.number;
+                        }
                     }
-                }
-            )
-            } else if(categories && subCategories) {
+                )
+            } else if (categories && subCategories) {
                 boardService.getchangeContent(this.page, subCategories).then(
-                (res) => {
-                    console.log(res);
-                    if (res.data === '') {
-                        this.empty = true;
-                    } else {
-                        this.empty = false;
-                        this.content = res.data.content;
-                        this.totalPages = res.data.totalPages;
-                        this.page.page = res.data.number;
+                    (res) => {
+                        console.log(res);
+                        if (res.data === '') {
+                            this.empty = true;
+                        } else {
+                            this.empty = false;
+                            this.content = res.data.content;
+                            this.totalPages = res.data.totalPages;
+                            this.page.page = res.data.number;
+                        }
                     }
-                }
-            )
+                )
             }
-           
+
 
 
         },
@@ -205,16 +242,16 @@ export default {
             this.page.page = value.requestPage;
             this.search();
         },
-        onSortChange(event) {
-            this.sortHeader = event.target.value;
-            this.page.sort = this.sortHeader + ',' + this.sortDirection;
-            this.search();
-        },
-        onSortDirectionChange(event) {
-            this.sortDirection = event.target.value;
-            this.page.sort = this.sortHeader + ',' + this.sortDirection;
-            this.search();
-        },
+        // onSortChange(event) {
+        //     this.sortHeader = event.target.value;
+        //     this.page.sort = this.sortHeader + ',' + this.sortDirection;
+        //     this.search();
+        // },
+        // onSortDirectionChange(event) {
+        //     this.sortDirection = event.target.value;
+        //     this.page.sort = this.sortHeader + ',' + this.sortDirection;
+        //     this.search();
+        // },
         getTab() {
             boardService.getTab()
                 .then(res => {
@@ -283,8 +320,8 @@ table {
 }
 
 .container {
-    width: 100%;
-    max-width: 1024px;
+    
+    width: 1024px;
     min-height: 800px;
     margin: 0 auto;
     background: #fff;
@@ -447,26 +484,63 @@ tbody tr td.desc {
 }
 
 .search {
+    margin-top: 15px;
     position: relative;
-    width: 310px;
-    border: 1px solid;
-}
-
-.search_btn {
-    vertical-align: middle;
-    width: 30px;
-    height: 25px;
-    float: right;
-    border: 0px;
-    outline: none;
-    background: url("@/assets/search_FILL0_wght400_GRAD0_opsz24.png") no-repeat;
+    display: inline-block;
 }
 
 .search_input {
-    height: 25px;
+    width: 350px;
+    font-size: 14px;
+    border-radius: 4px;
+    padding-right: 30px;
+}
+
+.search_btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 34px;
+    background: url("@/assets/search_FILL0_wght400_GRAD0_opsz24.png") no-repeat center center;
+    background-size: cover;
     border: none;
-    width: 270px;
+    cursor: pointer;
+}
+
+
+
+.search_input:focus {
     outline: none;
+    border-color: #007bff;
+}
+
+.search_select {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.search_select option {
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+}
+
+.input-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.search_input,
+.search_select {
+    height: 36px;
+    box-sizing: border-box;
+    padding: 8px;
+    border: 1px solid #ccc;
 }
 </style>
   

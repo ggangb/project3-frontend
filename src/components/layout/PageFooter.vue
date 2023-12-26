@@ -21,14 +21,25 @@
             </router-link>
             </li>
             <li class="league_item">
+              <router-link to="/news">
               <a class="link_league">
                 뉴스
               </a>
+              </router-link>
             </li>
             <li class="league_item">
+              <router-link to="/rank">
               <a class="link_league">
                 기록/순위
               </a>
+              </router-link>
+            </li>
+            <li class="league_item">
+              <router-link to="/result">
+              <a class="link_league">
+                일정/결과
+              </a>
+              </router-link>
             </li>
             
           </ul>
@@ -37,7 +48,6 @@
       <div class="footer_info">
         <div class="link_area">
           <div class="main_area">
-            <a class="link">로그아웃</a>
             <a class="link sitemap">사이트소개</a>
             <a class="link">고객센터</a>
             <a class="link">문제신고</a>
