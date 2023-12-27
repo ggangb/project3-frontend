@@ -18,9 +18,10 @@
         </div>
       </div>
       <div v-if="currentUser" class="football_tool">
-        <button class="nav_btn">
-          <a @click.prevent="logOut" class="nav_btn_login">로그아웃</a>
-        </button>
+        <ul class="football_tool_item">
+          <li class="myinfo"><router-link to="/profile">내정보</router-link></li>
+          <li class="logout"><a @click.prevent="logOut">로그아웃</a></li>
+        </ul>
       </div>
     </div>
     <div class="football_nav_sub">
@@ -67,11 +68,6 @@ export default {
 </script>
 
 <style scoped>
-a {
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.5);
-}
-
 .football_header {
   background-image: linear-gradient(256deg, #28b4ff, #255fbe);
   position: relative;
@@ -83,6 +79,15 @@ a {
   margin: 0 auto;
   height: 60px;
   font-size: 1px;
+}
+
+.football_tool_item {
+  list-style-type: none; 
+  padding: 0; 
+  display: flex; 
+}
+.football_tool_item li {
+  margin-right: 10px;
 }
 
 .football_nav .logo_area {
@@ -100,10 +105,20 @@ a {
   height: 40px;
 }
 
+.myinfo a , .logout a {
+  color: white;
+  text-decoration: none;
+}
+
 .football_tool {
   float: right;
   padding: 2px;
   margin-top: 15px;
+}
+
+.football_tool ul {
+  font-size: 10px;
+  color: white !important;
 }
 
 .nav_btn {
@@ -134,12 +149,23 @@ a {
   width: 1024px;
   margin: 0 auto;
   padding-left: 5px;
+
+}
+
+.football_category a {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .football_util {
   margin: 0 auto;
   padding-left: 5px;
 }
+
+.football_util a {
+  color: white;
+}
+
 .football_util ul {
   display: flex;
   margin: 0 auto;
@@ -165,4 +191,5 @@ ul {
 .router-link-active {
   font-weight: 800;
   color: white !important;
-}</style>
+}
+</style>

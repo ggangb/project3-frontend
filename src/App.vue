@@ -35,7 +35,9 @@ export default {
 
 <style>
 
-
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
 #footer {
   background: #f2f4f7;
 }

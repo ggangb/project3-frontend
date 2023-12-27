@@ -25,7 +25,7 @@
                                     <a class="thumb" :href="news.link"><img :src="news.img" /></a>
                                     <div class="text">
                                         <a class="news_title" :href="news.link">{{ removeTag(news.title, 'b') }}</a>
-                                        <p class="news_content" >{{ removeTag(news.description, 'b') }}</p>
+                                        <p class="news_content">{{ removeTag(news.description, 'b') }}</p>
                                         <div class="news_date">
                                             <span class="time" v-text="news.pubDate"></span>
                                         </div>
@@ -81,15 +81,13 @@ export default {
                             .all(this.request) //만들어 놓은 뉴스 url 배열로 요청보내기
                             .then(
                                 this.$axios.spread((...response) => { //응답에서 meta og : image만 가져와서 이미지 url 삽입
-                                    for (var i in response) {
-                                        var $ = cheerio.load(response[i].data)
-                                        var result = $('meta[property=\'og:image\']').attr('content')
-                                        this.newsData[i].img = result
-                                        const newsJson = JSON.stringify(this.newsData);
-                                        const modifiedNews = newsJson.replace(/&quot;/g, '');
-                                        modifiedNews.replace(new RegExp(`<b[^>]*>|</b>`, 'gi'), '');
-                                        this.newsData = JSON.parse(modifiedNews);
-                                    }
+                                    response.forEach((response, i) => {
+                                        const $ = cheerio.load(response.data);
+                                        const result = $('meta[property=\'og:image\']').attr('content');
+                                        this.newsData[i].img = result;
+                                    });
+                                    const modifiedNews = JSON.stringify(this.newsData).replace(/&quot;/g, '');
+                                    this.newsData = JSON.parse(modifiedNews);
                                 })
                             )
                             .catch((error) => {
@@ -116,15 +114,13 @@ export default {
                             .all(this.request) //만들어 놓은 뉴스 url 배열로 요청보내기
                             .then(
                                 this.$axios.spread((...response) => { //응답에서 meta og : image만 가져와서 이미지 url 삽입
-                                    for (var i in response) {
-                                        var $ = cheerio.load(response[i].data)
-                                        var result = $('meta[property=\'og:image\']').attr('content')
+                                    response.forEach((response, i) => {
+                                        const $ = cheerio.load(response.data);
+                                        const result = $('meta[property=\'og:image\']').attr('content');
                                         this.newsData[i].img = result;
-                                        const newsJson = JSON.stringify(this.newsData);
-                                        const modifiedNews = newsJson.replace(/&quot;/g, '');
-                                        modifiedNews.replace(new RegExp(`<b[^>]*>|</b>`, 'gi'), '');
-                                        this.newsData = JSON.parse(modifiedNews);
-                                    }
+                                    });
+                                    const modifiedNews = JSON.stringify(this.newsData).replace(/&quot;/g, '');
+                                    this.newsData = JSON.parse(modifiedNews);
                                 })
                             )
                             .catch((error) => {
@@ -158,7 +154,7 @@ export default {
             this.getData(this.search, this.pageIndex);
         },
         removeTag(value, tag) {
-          return value.replace(new RegExp(`<${tag}[^>]*>|</${tag}>`, 'gi'), '');
+            return value.replace(new RegExp(`<${tag}[^>]*>|</${tag}>`, 'gi'), '');
         },
     },
 

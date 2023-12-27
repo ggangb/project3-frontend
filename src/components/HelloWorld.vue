@@ -14,8 +14,8 @@
                   <div class="text">
                     <a class="news_thumb" :href="news.link"><img :src="news.img" /></a>
                     <div class="news_textarea">
-                      <h1 class="news_title"><a :href="news.link" >{{ removeTag(news.title, 'b') }}</a></h1>
-                      <span class="news_description" >{{ removeTag(news.description, 'b') }}</span>
+                      <h1 class="news_title"><a :href="news.link">{{ removeTag(news.title, 'b') }}</a></h1>
+                      <span class="news_description">{{ removeTag(news.description, 'b') }}</span>
                     </div>
                   </div>
                 </li>
@@ -36,7 +36,7 @@
               <li>
                 <div>
                   <div class="trans_textarea">
-                    <h1 class="trans_title"><a :href="transnews.link">{{removeTag(transnews.title, 'b') }}</a></h1>
+                    <h1 class="trans_title"><a :href="transnews.link">{{ removeTag(transnews.title, 'b') }}</a></h1>
                   </div>
                 </div>
               </li>
@@ -54,9 +54,9 @@
           </div>
           <table>
             <colgroup>
-                  <col width="80">
-                  <col width="10">
-                  <col width="10">
+              <col width="80">
+              <col width="10">
+              <col width="10">
             </colgroup>
             <thead>
               <tr>
@@ -90,11 +90,11 @@
           </div>
           <div class="table_tab">
             <div class="inner">
-              <a :class="{ active: pl }" @click="getTable(league_pl)">프리미어리그</a>
-              <a :class="{ active: sa }" @click="getTable(league_sa)">세리에 A</a>
-              <a :class="{ active: pd }" @click="getTable(league_pd)">라리가</a>
-              <a :class="{ active: bl1 }" @click="getTable(league_bl1)">분데스리가</a>
-              <a :class="{ active: fl1 }" @click="getTable(league_fl1)">리그앙</a>
+              <ul class="league_list">
+                <li v-for="league in leagues" :key="league.code" :class="{ active: activeLeague === league.code }">
+                  <a @click="getTable(league.code)">{{ league.name }}</a>
+                </li>
+              </ul>
             </div>
           </div>
           <div class="table_content">
@@ -141,11 +141,11 @@
             </div>
             <div class="table_tab">
               <div class="inner">
-                <a :class="{ active: pls }" v-on:click="getScore(league_pl)">프리미어리그</a>
-                <a :class="{ active: sas }" v-on:click="getScore(league_sa)">세리에 A</a>
-                <a :class="{ active: pds }" v-on:click="getScore(league_pd)">라리가</a>
-                <a :class="{ active: bl1s }" v-on:click="getScore(league_bl1)">분데스리가</a>
-                <a :class="{ active: fl1s }" v-on:click="getScore(league_fl1)">리그앙</a>
+                <ul class="league_list">
+                  <li v-for="league in leagues" :key="league.code" :class="{ active: activeScore === league.code }">
+                    <a @click="getScore(league.code)">{{ league.name }}</a>
+                  </li>
+                </ul>
               </div>
             </div>
             <div class="table_content">
@@ -185,8 +185,6 @@
 <script>
 const api_url = "http://localhost:3000/home/news"; //네이버 뉴스 요청
 const trans_url = "http://localhost:3000/home/trans"; //네이버 뉴스 요청
-const table_url = "http://localhost:3000/home/table" //리그 테이블 요청
-const score_url = "http://localhost:3000/home/score" //리그 개인기록 요청
 const newpost = "http://localhost:3000/home/board" //최신글 요청
 const anywhere = "https://proxy.cors.sh/"; //네이버 뉴스 cors 에러
 const headers = {
@@ -204,22 +202,16 @@ export default {
       table: [],
       newPost: [],
       score: [],
-      pl: false,
-      sa: false,
-      pd: false,
-      bl1: false,
-      fl1: false,
-      pls: false,
-      sas: false,
-      pds: false,
-      bl1s: false,
-      fl1s: false,
-      league_pl: "PL",
-      league_sa: "SA",
-      league_pd: "PD",
-      league_bl1: "BL1",
-      league_fl1: "FL1",
-    }
+      activeLeague: 'PL',
+      activeScore: 'PL',
+      leagues: [
+        { code: 'PL', name: '프리미어리그' },
+        { code: 'SA', name: '세리에 A' },
+        { code: 'PD', name: '라리가' },
+        { code: 'BL1', name: '분데스리가' },
+        { code: 'FL1', name: '리그앙' },
+      ],
+    };
   },
   methods: {
     getData() {  //네이버 뉴스 정보를 받아오는 메소드
@@ -239,14 +231,13 @@ export default {
             .all(this.request) //만들어 놓은 뉴스 url 배열로 요청보내기
             .then(
               this.$axios.spread((...response) => { //응답에서 meta og : image만 가져와서 이미지 url 삽입
-                for (var i in response) {
-                  var $ = cheerio.load(response[i].data)
-                  var result = $('meta[property=\'og:image\']').attr('content')
-                  this.newsData[i].img = result
-                  const newsJson = JSON.stringify(this.newsData);
-                  const modifiedNews = newsJson.replace(/&quot;/g, '');
-                  this.newsData = JSON.parse(modifiedNews);
-                }
+                response.forEach((response, i) => {
+                  const $ = cheerio.load(response.data);
+                  const result = $('meta[property=\'og:image\']').attr('content');
+                  this.newsData[i].img = result;
+                });
+                const modifiedNews = JSON.stringify(this.newsData).replace(/&quot;/g, '');
+                this.newsData = JSON.parse(modifiedNews);
 
               })
             )
@@ -261,147 +252,47 @@ export default {
 
 
     },
-    getTable(league) {
-      switch (league) {
-        case "PL":
-          this.pl = !this.pl
-          this.sa = false
-          this.pd = false
-          this.bl1 = false
-          this.fl1 = false
-          break;
-        case "SA":
-          this.sa = !this.sa
-          this.pl = false
-          this.pd = false
-          this.bl1 = false
-          this.fl1 = false
-          break;
-        case "PD":
-          this.pd = !this.pd
-          this.sa = false
-          this.pl = false
-          this.bl1 = false
-          this.fl1 = false
-          break;
-        case "BL1":
-          this.bl1 = !this.bl1
-          this.pd = false
-          this.sa = false
-          this.pl = false
-          this.fl1 = false
-          break;
-        case "FL1":
-          this.fl1 = !this.fl1
-          this.bl1 = false
-          this.pd = false
-          this.sa = false
-          this.pl = false
-          break;
-        default:
-        this.pl = !this.pl
-          this.sa = false
-          this.pd = false
-          this.bl1 = false
-          this.fl1 = false
-          break;
-      }
-      if (league == null) {
-        this.$axios
-          .get(table_url + "/" + "PL")
-          .then((res) => {
-            this.table = res.data.standings[0].table;
-            console.log(res.data)
-          })
-          .catch((error) => {
-            console.log(error);
-          })
-      } else {
 
-        this.$axios
-          .get(table_url + "/" + league)
-          .then((res) => {
-            this.table = res.data.standings[0].table;
-            console.log(res.data)
-          })
-          .catch((error) => {
-            console.log(error);
-          })
+    // 리그 테이블 데이터를 가져오는 메서드
+    getTable(league) {
+      if(league == null || league == undefined){
+        league = "PL"
       }
+      this.activeLeague = league;
+      const tableUrl = `http://localhost:3000/home/table/${league}`;
+      this.$axios
+        .get(tableUrl)
+        .then((res) => {
+          this.table = res.data.standings[0].table;
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
+
     getScore(league) {
-      switch (league) {
-        case "PL":
-          this.pls = !this.pls
-          this.sas = false
-          this.pds = false
-          this.bl1s = false
-          this.fl1s = false
-          break;
-        case "SA":
-          this.sas = !this.sas
-          this.pls = false
-          this.pds = false
-          this.bl1s = false
-          this.fl1s = false
-          break;
-        case "PD":
-          this.pds = !this.pds
-          this.sas = false
-          this.pls = false
-          this.bl1s = false
-          this.fl1s = false
-          break;
-        case "BL1":
-          this.bl1s = !this.bl1s
-          this.pds = false
-          this.sas = false
-          this.pls = false
-          this.fl1s = false
-          break;
-        case "FL1":
-          this.fl1s = !this.fl1s
-          this.bl1s = false
-          this.pds = false
-          this.sas = false
-          this.pls = false
-          break;
-        default:
-        this.pls = !this.pls
-          this.sas = false
-          this.pds = false
-          this.bl1s = false
-          this.fl1s = false
-          break;
+      if(league == null || league == undefined){
+        league = "PL"
       }
-      if (league == null) {
-        this.$axios
-          .get(score_url + "/" + "PL")
-          .then((res) => {
-            this.score = res.data.scorers;
-            console.log(res.data)
-          })
-          .catch((error) => {
-            console.log(error);
-          })
-      } else {
-        this.$axios
-          .get(score_url + "/" + league)
-          .then((res) => {
-            this.score = res.data.scorers;
-            console.log(res.data)
-          })
-          .catch((error) => {
-            console.log(error);
-          })
-      }
+      this.activeScore = league;
+      const scoreUrl = `http://localhost:3000/home/score/${league}`;
+      this.$axios
+        .get(scoreUrl)
+        .then((res) => {
+          this.score = res.data.scorers;
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     getTrans() {
       this.$axios
         .get(trans_url)
         .then((res) => {
           const trans = JSON.stringify(res.data.items);
-          const removeTrans = trans.replace(/&quot;/g, '');
+          const removeTrans = trans.replaceAll('&quot;', '');
           this.modifiedTrans = JSON.parse(removeTrans);
           console.log(res.data)
 
@@ -426,7 +317,7 @@ export default {
     },
   }
   ,
-  
+
 
   created() {
     this.getData();
@@ -447,6 +338,15 @@ a {
 a:hover {
   text-decoration: underline;
   cursor: pointer;
+}
+
+.league_list {
+  display: flex;
+  list-style: none;
+  padding: 0 10px;
+}
+.league_list li {
+  padding: 0 5px;
 }
 
 .container {
@@ -605,6 +505,7 @@ a:hover {
   border-top: 1px solid #225dcb;
   border-bottom: 1px solid #f1f1f1;
 }
+
 .trans_post .head {
   overflow: hidden;
   position: relative;
@@ -694,8 +595,8 @@ a:hover {
   font-size: 13px;
 }
 
-.table_tab .inner .active {
-  color: #225dcb;
+.table_tab .inner .active a {
+  color: #225dcb !important;
 }
 
 .table_content table,
@@ -771,4 +672,5 @@ a:hover {
 .info {
   display: inline-block;
   vertical-align: middle;
-}</style>
+}
+</style>
