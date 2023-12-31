@@ -51,6 +51,10 @@ class BoardService {
     searchContent(pageable, searchData) {
         return api.get('/searchcontent', { params: searchData})
     }
+
+    getMyPost(pageable,postData) {
+        return api.get("/mypost", { params: postData})
+    }
 }
 
 export default new BoardService();

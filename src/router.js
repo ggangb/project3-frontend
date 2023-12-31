@@ -41,13 +41,34 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ './view/PageChangePw.vue')
   }, 
   {
-    path: '/profile',
-    name: 'PageProfile',
+    path: '/emailchange',
+    name: 'PageChangeEmail',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ './view/PageProfile.vue')
+    component: () => import(/* webpackChunkName: "about" */ './view/PageChangeEmail.vue')
   }, 
+  {
+    path: '/profile',
+    children: [
+      {
+        path:'',
+        name: 'Pageprofile',
+        component: () => import(/* webpackChunkName: "about" */ './view/PageProfile.vue'),
+      },
+      {
+        path:'/mypost',
+        name: 'PageMyPost',
+        props: true,
+        component: () => import(/* webpackChunkName: "about" */ './view/PageMyPost.vue'),
+      },
+    ]
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+   
+  }, 
+  
   {
     path: '/result',
     name: 'PageLive',

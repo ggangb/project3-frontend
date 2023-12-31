@@ -15,7 +15,10 @@ class UserService {
         return api.get("/auth/verifytoken", { params: { token } });
     }
     changePw(changeData) {
-        return api.post("/changepw",{ params: { changeData } } )
+        return api.post("/auth/changepw", changeData )
+    }
+    changeEmail(changeEmail) {
+        return api.post('/auth/changeemail', changeEmail);
     }
 
 }

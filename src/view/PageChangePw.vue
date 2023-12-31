@@ -52,6 +52,8 @@ export default {
     data() {
         return {
             pwDuplicateStatus: '',
+            token: '',
+            password: ''
         }
     },
     computed: {
@@ -60,7 +62,9 @@ export default {
         }
     },
     created() {
-        if (this.loggedIn) {
+        console.log(this.$route.query.token)
+        if (!this.$route.query.token) {
+            alert('잘못된 요청입니다.');
             this.$router.push("/");
         }
 

@@ -4,98 +4,103 @@
             <div class="login_form">
 
                 <div class="pannel">
-                    <div class="login_img">
-                        <img src="@/assets/football.png" style="height: 50px; float: left;" />
-                    </div>
                     <div class="pannel_inner">
-                        <div>
-                            <span class="material-symbols-outlined" style="font-size: 100px; text-align: center;">
+                        <div class="my_profile">
+                            <span class="material-symbols-outlined" style="font-size: 100px; text-align: center; ">
                                 account_circle
                             </span>
+                            <span class="profile_username">{{ user.username }}</span>
                         </div>
-                        <div class="form_idpw">
-                            <div class="id_line" ref="checkUser">
+                        <div class="form_info">
+                            <div class="account_info">
+                                <div class="title">
+                                    <h2>내프로필</h2>
+                                </div>
                                 <div>
-                                    <span class="material-symbols-outlined">person</span>
-                                    <input v-model="username" class="form_id" type="text" placeholder="아이디" required
-                                        @input="checkUsernameDuplicate" />
-                                    <span class="material-symbols-outlined" style="color:red"
-                                        v-if="usernameDuplicateStatus === 'duplicate'">
-                                        close
-                                    </span>
-                                    <span class="material-symbols-outlined" style="color:green"
-                                        v-if="usernameDuplicateStatus === 'available'">
-                                        check
-                                    </span>
-                                    <span class="material-symbols-outlined" v-if="usernameDuplicateStatus === 'checking'">
-                                        pending
-                                    </span>
+                                    <ul class="account_row">
+                                        <li>
+                                            <div class="row_item">
+                                                <span class="material-symbols-outlined" style="vertical-align: middle;">
+                                                    person
+                                                </span>
+                                                <span class="item_text">{{ user.username }}</span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row_item">
+                                                <span class="material-symbols-outlined" style="vertical-align: middle;">
+                                                    lock
+                                                </span>
+                                                <span class="item_text">비밀번호</span>
+                                                <button @click="goPwChange">
+                                                    변경
+                                                </button>
+
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row_item">
+                                                <span class="material-symbols-outlined" style="vertical-align: middle;">
+                                                    email
+                                                </span>
+                                                <span class="item_text">{{ user.email }}</span>
+                                                <button @click="goEmailChange">
+                                                    변경
+                                                </button>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row_item">
+                                                <span class="material-symbols-outlined" style="vertical-align: middle;">
+                                                    phone_iphone
+                                                </span>
+                                                <span class="item_text">{{ user.phone }}</span>
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
-                            <div class="id_notice">
-                                <span ref="idnotice">4글자 이상</span>
-                            </div>
-                            <div class="pw_line" ref="checkPw">
-                                <div>
-                                    <span class="material-symbols-outlined">lock</span>
-                                    <input v-model="password" @input="checkPwRegex" class="form_pw" type="password"
-                                        placeholder="비밀번호" required />
-                                    <span class="material-symbols-outlined" style="color:red"
-                                        v-if="pwDuplicateStatus === 'duplicate'">
-                                        close
-                                    </span>
-                                    <span class="material-symbols-outlined" style="color:green"
-                                        v-if="pwDuplicateStatus === 'available'">
-                                        check
-                                    </span>
+                            <div class="account_info">
+                                <div class="title">
+                                    <h2>이력관리</h2>
                                 </div>
-                            </div>
-                            <div class="id_notice">
-                                <span class="pw_notice" ref="noticePw">영문+숫자를포함 6자리 이상</span>
-                            </div>
-                            <div class="email_line" ref="checkEmail">
                                 <div>
-                                    <span class="material-symbols-outlined">mail</span>
-                                    <input v-model="email" class="form_email" type="email" placeholder="이메일" required
-                                        @input="checkEmailDuplicate" />
-                                    <span class="material-symbols-outlined" style="color:red"
-                                        v-if="userEmailDuplicateStatus === 'duplicate'">
-                                        close
-                                    </span>
-                                    <span class="material-symbols-outlined" style="color:green"
-                                        v-if="userEmailDuplicateStatus === 'available'">
-                                        check
-                                    </span>
-                                    <span class="material-symbols-outlined" v-if="userEmailDuplicateStatus === 'checking'">
-                                        pending
-                                    </span>
+                                    <ul class="account_row">
+                                        <li>
+                                            <div class="row_item">
+                                                <span class="material-symbols-outlined" style="vertical-align: middle;">
+                                                    edit_document
+                                                </span>
+                                               <router-link :to="{name: 'PageMyPost', state: { type : 'post'}}"> <span class="item_text" >작성글목록</span></router-link>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row_item">
+                                                <span class="material-symbols-outlined" style="vertical-align: middle;">
+                                                    comment
+                                                </span>
+                                                <router-link :to="{name: 'PageMyPost', state: { type : 'comment'}}"> <span class="item_text">댓글목록</span></router-link>
+
+
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row_item">
+                                                <span class="material-symbols-outlined" style="vertical-align: middle;">
+                                                    recommend
+                                                </span>
+                                                <router-link :to="{name: 'PageMyPost', state: { type : 'recommend'}}">  <span class="item_text">추천글목록</span></router-link>
+
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
-                            </div>
-                            <div class="id_notice">
-                                <span ref="noticeEmail">이메일 형식으로 작성해주세요.</span>
-                            </div>
-                            <div class="phone_line" ref="checkPhone">
-                                <div>
-                                    <span class="material-symbols-outlined">smartphone</span>
-                                    <input v-model="phone" @input="checkPhoneRegex" class="form_phone" placeholder="전화번호"
-                                        required />
-                                    <span class="material-symbols-outlined" style="color:red"
-                                        v-if="phoneDuplicateStatus === 'duplicate'">
-                                        close
-                                    </span>
-                                    <span class="material-symbols-outlined" style="color:green"
-                                        v-if="phoneDuplicateStatus === 'available'">
-                                        check
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="id_notice">
-                                <span ref="noticePhone">예시 : 010-0000-0000</span>
                             </div>
                         </div>
-                        <div class="login_btn">
-                            <button type="submit">
-                                <span>회원가입</span>
+
+                        <div class="profile_btn">
+                            <button @click="goHome">
+                                <span>확인</span>
                             </button>
                         </div>
                     </div>
@@ -107,22 +112,96 @@
   
   
 <script>
+import tokenService from '@/service/token.service';
 
 
 export default {
     data() {
         return {
-
+            user: {}
         }
     },
     methods: {
-
+        goHome() {
+            this.$router.push('/');
+        },
+        goPwChange() {
+            this.$router.push({
+                name: 'PageChangePw', query: {
+                    token: this.user.accessToken
+                }
+            });
+        },
+        goEmailChange() {
+            this.$router.push('/emailchange');
+        }
+    },
+    created() {
+        this.user = tokenService.getUser();
+        console.log(this.user.accessToken)
     }
 
 }
 </script>
   
 <style scoped>
+.account_info .title {
+    position: relative;
+    display: block;
+    padding: 15px 38px 13px 18px;
+    border-radius: 12px 12px 0 0;
+    background-image: linear-gradient(256deg, #28b4ff, #255fbe);
+}
+
+.account_info {
+    padding-top: 15px;
+}
+
+.title h2 {
+    color: white;
+    font-weight: bold;
+}
+
+.account_row {
+    padding: 0 17px;
+    box-shadow: 1px 1px 10px 0 rgba(72, 75, 108, .08);
+    border: solid 1px #e3e9ed;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+.account_row button {
+    float: right;
+}
+
+.item_text {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: -.8px;
+    color: #303038;
+    word-break: break-all;
+    vertical-align: middle;
+    padding-left: 10px;
+}
+
+.row_item {
+    position: relative;
+    padding: 10px 0 10px 10px;
+    border-block-end: 1px solid #eee;
+}
+
+.my_profile {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+}
+
+.profile_username {
+    text-align: center;
+}
+
 .form_idpw .id_line,
 .pw_line,
 .email_line,
@@ -177,7 +256,7 @@ export default {
 }
 
 .container {
-    min-height: 650px;
+    min-height: 750px;
 }
 
 .content {
@@ -210,14 +289,12 @@ export default {
     padding: 20px 28px;
 }
 
-.pannel_inner h2 {
-    text-align: center;
-    font-size: 35px;
-    margin-bottom: 35px;
-    color: #888;
+
+.profile_btn {
+    padding-top: 15px;
 }
 
-.login_btn button {
+.profile_btn button {
     display: block;
     width: 100%;
     padding: 13px 0 13px;
@@ -228,7 +305,7 @@ export default {
     height: 75px;
 }
 
-.login_btn span {
+.profile_btn span {
     font-size: 20px;
     font-weight: 700;
     line-height: 24px;

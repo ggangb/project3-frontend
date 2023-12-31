@@ -34,7 +34,9 @@ export default {
 </script>
 
 <style>
-
+a {
+  text-decoration: none;
+}
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
