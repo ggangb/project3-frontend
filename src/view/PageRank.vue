@@ -386,8 +386,8 @@
 </template>
 
 <script>
-const season_url = "http://localhost:3000/home/season"
-const scorers_url = "http://localhost:3000/home/scorers"
+const season_url = process.env.VUE_APP_BASE_URL+"/home/season"
+const scorers_url = process.env.VUE_APP_BASE_URL+"/home/scorers"
 export default {
     data() {
         return {

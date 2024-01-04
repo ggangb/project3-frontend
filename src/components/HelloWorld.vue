@@ -183,9 +183,9 @@
 </template>
 
 <script>
-const api_url = "http://localhost:3000/home/news"; //네이버 뉴스 요청
-const trans_url = "http://localhost:3000/home/trans"; //네이버 뉴스 요청
-const newpost = "http://localhost:3000/home/board" //최신글 요청
+const api_url = process.env.VUE_APP_BASE_URL+"/home/news"; //네이버 뉴스 요청
+const trans_url = process.env.VUE_APP_BASE_URL+"/home/trans"; //네이버 뉴스 요청
+const newpost = process.env.VUE_APP_BASE_URL+"/home/board" //최신글 요청
 const anywhere = "https://proxy.cors.sh/"; //네이버 뉴스 cors 에러
 const headers = {
   'x-cors-api-key': 'temp_1827830fbc462df024ee3074f62046cd' //cors 설정 헤더
@@ -259,7 +259,7 @@ export default {
         league = "PL"
       }
       this.activeLeague = league;
-      const tableUrl = `http://localhost:3000/home/table/${league}`;
+      const tableUrl = `${process.env.VUE_APP_BASE_URL}/home/table/${league}`;
       this.$axios
         .get(tableUrl)
         .then((res) => {
@@ -276,7 +276,7 @@ export default {
         league = "PL"
       }
       this.activeScore = league;
-      const scoreUrl = `http://localhost:3000/home/score/${league}`;
+      const scoreUrl = `${process.env.VUE_APP_BASE_URL}/home/score/${league}`;
       this.$axios
         .get(scoreUrl)
         .then((res) => {
