@@ -17,7 +17,7 @@ jobs:
     - name: Set environment variable
       run: | 
         touch .env
-        echo "VUE_APP_BASE_URL=https://footballmoa.azurewebsites.net" >> ./
+        echo "VUE_APP_BASE_URL=https://footballmoa.azurewebsites.net" >> .env
       
     - uses: actions/checkout@v2
     
