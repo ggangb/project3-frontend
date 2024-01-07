@@ -183,10 +183,12 @@
 </template>
 
 <script>
-const api_url = process.env.VUE_APP_BASE_URL+"/home/news"; //네이버 뉴스 요청
-const trans_url = process.env.VUE_APP_BASE_URL+"/home/trans"; //네이버 뉴스 요청
-const newpost =  process.env.VUE_APP_BASE_URL+"/home/board" //최신글 요청
-const anywhere = "https://proxy.cors.sh/"; //네이버 뉴스 cors 에러
+
+const api_url = process.env.VUE_APP_BASE_URL + "/home/news"; //네이버 뉴스 요청
+const trans_url = process.env.VUE_APP_BASE_URL + "/home/trans"; //네이버 뉴스 요청
+const newpost = process.env.VUE_APP_BASE_URL + "/home/board" //최신글 요청
+const anywhere = "https://proxy.cors.sh/"; //네이버 뉴스 CORS 에러를 우회하기 위한 프록시 URL
+
 const headers = {
   'x-cors-api-key': 'temp_1827830fbc462df024ee3074f62046cd' //cors 설정 헤더
 }
@@ -214,7 +216,8 @@ export default {
     };
   },
   methods: {
-    getData() {  //네이버 뉴스 정보를 받아오는 메소드
+    //네이버 뉴스 정보를 받아오는 메소드
+    getData() {
       this.$axios
         .get(api_url
         )
@@ -255,7 +258,7 @@ export default {
 
     // 리그 테이블 데이터를 가져오는 메서드
     getTable(league) {
-      if(league == null || league == undefined){
+      if (league == null || league == undefined) {
         league = "PL"
       }
       this.activeLeague = league;
@@ -270,9 +273,9 @@ export default {
           console.log(error);
         });
     },
-
+    //리그 스코어 데이터를 가져오는 메소드
     getScore(league) {
-      if(league == null || league == undefined){
+      if (league == null || league == undefined) {
         league = "PL"
       }
       this.activeScore = league;
@@ -287,6 +290,7 @@ export default {
           console.log(error);
         });
     },
+    //이적시장 뉴스를 가져오는 메소드
     getTrans() {
       this.$axios
         .get(trans_url)
@@ -301,6 +305,7 @@ export default {
           console.log(error);
         })
     },
+    //최신글 데이터를 가져오는 메소드
     getContent() {
       this.$axios
         .get(newpost)
@@ -312,13 +317,14 @@ export default {
           console.log(error);
         })
     },
+    //HTML태그를 제거하는 메소드
     removeTag(value, tag) {
       return value.replace(new RegExp(`<${tag}[^>]*>|</${tag}>`, 'gi'), '');
     },
   }
   ,
 
-
+  //컴포넌트가 생성될 때 호출되는 라이프사이클 훅으로, 초기 데이터를 가져오는 메소드들을 호출합니다.
   created() {
     this.getData();
     this.getTable();
@@ -345,6 +351,7 @@ a:hover {
   list-style: none;
   padding: 0 10px;
 }
+
 .league_list li {
   padding: 0 5px;
 }
