@@ -326,6 +326,7 @@ export default {
 
   //컴포넌트가 생성될 때 호출되는 라이프사이클 훅으로, 초기 데이터를 가져오는 메소드들을 호출합니다.
   created() {
+    console.log(process.env.VUE_APP_BASE_URL);
     this.getData();
     this.getTable();
     this.getScore();
