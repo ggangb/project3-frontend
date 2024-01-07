@@ -23,6 +23,20 @@ jobs:
       run: |
             touch .env
             echo "VUE_APP_BASE_URL=${{ secrets.BASE_URL }}" >> .env
+    - name: Check file existence
+      run: |
+          ls .env
+          echo ".env created successfully"
+          ls -a
+    - name: Check .env file existence
+      run: |
+        if [ -f .env ]; then
+          echo ".env file exists"
+        else
+          echo ".env file does not exist"
+          exit 1
+        fi
+          
     - name: Log in to registry
       uses: docker/login-action@v2
       with:
@@ -33,9 +47,11 @@ jobs:
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
+        context: .
         push: true
         tags: footballmoabackregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_4c2b3cbfd1ab49ac9fb9f79a6b8147fb }}/footballmoabackregistry/footballmoafront:${{ github.sha }}
-        file: ./Dockerfile
+        build-args: |
+          VUE_APP_BASE_URL=${{ secrets.BASE_URL }}
 
   deploy:
     runs-on: ubuntu-latest
