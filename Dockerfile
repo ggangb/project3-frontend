@@ -14,9 +14,6 @@ RUN npm install
 # 앱 소스를 컨테이너로 복사
 COPY . .
 
-# .env 파일 추가
-COPY ./.env ./.env
-
 # 앱 빌드
 RUN npm run build
 
