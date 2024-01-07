@@ -15,8 +15,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - run: touch .env
-    - run: echo "${{ secrets.ENV }}" > .env
+    - run: mkdir -p app
+    - run: echo "${{ secrets.ENV }}" > app/.env
     
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
