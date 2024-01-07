@@ -38,7 +38,7 @@ const setup = (store) => {
             });
             const { accessToken } = rs.data;
             // 액세스 토큰을 업데이트하고 상태 관리를 위해 액션을 디스패치합니다.
-            store.dispatch('auth/refreshtoken', accessToken);
+            store.dispatch('/auth/refreshtoken', accessToken);
             TokenService.updateLocalAccessToken(accessToken);
             // 원래 요청을 재시도합니다.
             return axiosInstance(originalConfig);
