@@ -183,10 +183,12 @@
 </template>
 
 <script>
+
 const api_url = process.env.VUE_APP_BASE_URL + "/home/news"; //네이버 뉴스 요청
 const trans_url = process.env.VUE_APP_BASE_URL + "/home/trans"; //네이버 뉴스 요청
 const newpost = process.env.VUE_APP_BASE_URL + "/home/board" //최신글 요청
 const anywhere = "https://proxy.cors.sh/"; //네이버 뉴스 CORS 에러를 우회하기 위한 프록시 URL
+
 const headers = {
   'x-cors-api-key': 'temp_1827830fbc462df024ee3074f62046cd' //cors 설정 헤더
 }
