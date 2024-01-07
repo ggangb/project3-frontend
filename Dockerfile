@@ -11,9 +11,6 @@ COPY package*.json ./
 # 프로젝트 의존성 설치
 RUN npm install
 
-# 환경 변수 파일을 복사
-COPY .env ./
-
 # 앱 소스를 컨테이너로 복사
 COPY . .
 
