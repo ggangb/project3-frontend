@@ -29,7 +29,7 @@
       <div class="trans">
         <div class="trans_post">
           <div class="head">
-            <h2>이적뉴스</h2>
+            <h2>이적뉴스12</h2>
           </div>
           <div class="trans_form" v-for="(transnews, idx) in modifiedTrans" :key="idx">
             <ul>
