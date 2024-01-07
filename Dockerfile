@@ -11,11 +11,12 @@ COPY package*.json ./
 # 프로젝트 의존성 설치
 RUN npm install
 
-# /app 디렉토리에 있는 모든 파일을 확인하는 방법
-RUN ls /app
 
 # 앱 소스를 컨테이너로 복사
 COPY . .
+
+# /app 디렉토리에 있는 모든 파일을 확인하는 방법
+RUN ls /app
 
 # 앱 빌드
 RUN npm run build
