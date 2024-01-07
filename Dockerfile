@@ -15,7 +15,7 @@ RUN npm install
 COPY . .
 
 # .env 파일 추가
-COPY .env ./.env
+COPY ./.env ./.env
 
 # 앱 빌드
 RUN npm run build
