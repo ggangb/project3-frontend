@@ -16,7 +16,7 @@ RUN npm install
 COPY . .
 
 # .env파일 복사
-COPY .env ./
+COPY .env .
 
 # /app 디렉토리에 있는 모든 파일을 확인하는 방법
 RUN ls /app
