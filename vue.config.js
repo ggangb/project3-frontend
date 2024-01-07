@@ -3,7 +3,7 @@ module.exports = defineConfig({
   transpileDependencies: true,
   lintOnSave: false,
   devServer: {
-    proxy: "http://localhost:3000"
+    proxy: process.env.VUE_APP_BASE_URL
   },
 })
 
