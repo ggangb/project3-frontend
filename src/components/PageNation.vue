@@ -2,6 +2,7 @@
     <div class="paging">
         <div class="pagable">
             <a class="prev" @click="onPageChange(currentPage - 1)">이전</a>
+            <!-- 페이지 번호를 출력하는 부분 -->
             <a v-for="(paging, index) in pages" :key="index" v-on:click="onPageChange(paging - 1)"
                 :class="paging - 1 === currentPage ? 'currentPage' : ''">{{ paging }}</a>
             <a class="next" @click="onPageChange(currentPage + 1)">다음</a>
@@ -21,14 +22,16 @@ export default {
         }
     },
     computed: {
-
+          // 현재 페이지와 전체 페이지 수에 따라 출력할 페이지 번호들을 계산하는 computed 속성
         pages: function () {
             const list = [];
             for (let index = this.startPage; index <= this.endPage; index += 1) { list.push(index); }
             return list;
         },
+         // 현재 페이지 기준으로 시작 페이지를 계산하는 computed 속성
         startPage() {
             return parseInt(this.currentPage / 5) * 5 + 1;
+        // 현재 페이지 기준으로 끝 페이지를 계산하는 computed 속성
         },
         endPage() {
             let lastPage = parseInt(this.currentPage / 5) * 5 + 5;
@@ -36,6 +39,7 @@ export default {
         }
     },
     methods: {
+        // 페이지 변경 시 호출되는 메소드
         onPageChange(val) {
             console.log(val)
             if (val < 0) {

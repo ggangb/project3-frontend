@@ -25,7 +25,7 @@ FROM nginx:stable AS production-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 
 # 80 포트를 외부에 노출합니다.
-EXPOSE 81
+EXPOSE 80
 
 # Nginx를 시작합니다.
 CMD ["nginx", "-g", "daemon off;"]
