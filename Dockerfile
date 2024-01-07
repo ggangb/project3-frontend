@@ -12,7 +12,7 @@ COPY package*.json ./
 RUN npm install
 
 # 앱 소스를 컨테이너로 복사
-COPY . ./
+COPY . .
 
 # 앱 빌드
 RUN npm run build
