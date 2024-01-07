@@ -184,9 +184,9 @@
 
 <script>
 
-const api_url = process.env.VUE_APP_BASE_URL + "/home/news"; //네이버 뉴스 요청
-const trans_url = process.env.VUE_APP_BASE_URL + "/home/trans"; //네이버 뉴스 요청
-const newpost = process.env.VUE_APP_BASE_URL + "/home/board" //최신글 요청
+const api_url = process.env.BASE_URL + "/home/news"; //네이버 뉴스 요청
+const trans_url = process.env._BASE_URL + "/home/trans"; //네이버 뉴스 요청
+const newpost = process.env.BASE_URL + "/home/board" //최신글 요청
 const anywhere = "https://proxy.cors.sh/"; //네이버 뉴스 CORS 에러를 우회하기 위한 프록시 URL
 
 const headers = {
