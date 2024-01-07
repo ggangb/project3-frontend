@@ -8,3 +8,4 @@ module.exports = defineConfig({
   },
 })
 
+console.log(process.env.VUE_APP_BASE_URL);
