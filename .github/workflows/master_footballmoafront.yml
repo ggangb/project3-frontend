@@ -15,7 +15,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - run: echo "VUE_APP_BASE_URL=${{ secrets.ENV }}" >> .env
+    - run: |
+        touch .env
+        echo "VUE_APP_BASE_URL=${{ secrets.ENV }}" >> .env
+        cat .env
           
     
     - name: Set up Docker Buildx
