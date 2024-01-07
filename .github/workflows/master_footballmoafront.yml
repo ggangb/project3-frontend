@@ -14,11 +14,11 @@ jobs:
     runs-on: 'ubuntu-latest'
 
     steps:
+    - uses: actions/checkout@v2
     - run: |
         touch .env
-        echo VUE_APP_BASE_URL=${{ secrets.ENV }} >> .env
+        echo VUE_APP_BASE_URL=https://footballmoa.azurewebsites.net >> .env
         cat .env
-    - uses: actions/checkout@v2
           
     
     - name: Set up Docker Buildx
