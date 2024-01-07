@@ -18,6 +18,7 @@ jobs:
       run: | 
         touch .env
         echo VUE_APP_BASE_URL=https://footballmoa.azurewebsites.net >> .env
+        working-directory: ./
       
     - uses: actions/checkout@v2
     
