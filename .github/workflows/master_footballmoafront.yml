@@ -41,8 +41,8 @@ jobs:
       with:
         push: true
         tags: footballmoabackregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_4c2b3cbfd1ab49ac9fb9f79a6b8147fb }}/footballmoabackregistry/footballmoafront:${{ github.sha }}
-        file: ./Dockerfile
-        env_file: .env
+        build-args: |
+          VUE_APP_BASE_URL=${{ secrets.BASE_URL }}
 
   deploy:
     runs-on: ubuntu-latest
