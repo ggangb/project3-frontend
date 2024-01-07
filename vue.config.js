@@ -1,4 +1,5 @@
 const { defineConfig } = require('@vue/cli-service')
+require('dotenv').config();
 module.exports = defineConfig({
   transpileDependencies: true,
   lintOnSave: false,
@@ -6,4 +7,3 @@ module.exports = defineConfig({
     proxy: process.env.VUE_APP_BASE_URL
   },
 })
-
