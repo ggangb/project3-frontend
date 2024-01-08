@@ -55,11 +55,11 @@ export default {
                 .then((res) => {
                     console.log(res);
                     if(res.data === true){
-                    alert('이메일로 전송되었습니다.')
-                    }
+                    alert(this.email+'로 전송되었습니다.')
+                    } 
                 })
                     .catch((error) => {
-                        alert(error);
+                        alert(error.response.data.message);
                     })
             }
         }
