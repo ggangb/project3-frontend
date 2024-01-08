@@ -81,7 +81,7 @@ export default {
         password: this.password
       }
       if (user) {
-        this.$store.dispatch("auth/login", user).then(() => {
+        this.$store.dispatch("/auth/login", user).then(() => {
           alert('환영합니다.')
           this.$router.push('/');
         })
