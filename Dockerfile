@@ -25,6 +25,9 @@ RUN npm run build
 # Nginx 이미지를 사용합니다.
 FROM nginx:stable AS production-stage
 
+# Nginx 설정 파일을 컨테이너에 복사합니다.
+COPY default.conf /etc/nginx/conf.d/default.conf
+
 # 빌드 스테이지에서 빌드된 파일을 Nginx에 복사합니다.
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 
