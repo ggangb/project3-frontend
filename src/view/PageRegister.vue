@@ -140,7 +140,7 @@ export default {
         phone: this.phone,
       }
       if (user) {
-        this.$store.dispatch("auth/register", user).then((res) => {
+        this.$store.dispatch("/auth/register", user).then((res) => {
           alert(res.message);
           this.$router.push('/login');
         })
