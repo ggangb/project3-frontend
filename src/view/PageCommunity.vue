@@ -12,14 +12,14 @@
                                 <ul class="best_left">
                                     <li v-for="(rank, idx) in rankData.slice(0, 5)" :key="idx">
                                         <span></span>
-                                        <router-link :to="`community/${rank.idx}`">[ 추천 : {{ rank.recommend }} ] "{{
+                                        <router-link :to="`view/${rank.idx}`">[ 추천 : {{ rank.recommend }} ] "{{
                                             rank.title }}</router-link>
                                     </li>
                                 </ul>
                                 <ul class="best_right">
                                     <li v-for="(rank, idx) in rankData.slice(5, 10)" :key="idx">
                                         <span></span>
-                                        <router-link :to="`community/${rank.idx}`">[ 추천 : {{ rank.recommend }} ] "{{
+                                        <router-link :to="`view/${rank.idx}`">[ 추천 : {{ rank.recommend }} ] "{{
                                             rank.title }}</router-link>
                                     </li>
                                 </ul>
