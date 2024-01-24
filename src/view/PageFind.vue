@@ -9,7 +9,7 @@
                             <img src="@/assets/football.png" />
                         </div>
                         <div class="pannel_inner">
-                            <h2>아이디/비번 찾기</h2>
+                            <h2>비밀번호 재설정</h2>
                             <div class="form_find">
                                 <div class="id_line">
                                     <div>
@@ -21,7 +21,7 @@
                             </div>
                             <div class="find_btn">
                                 <button type="submit">
-                                    <span>이메일로 아이디/비밀번호 받기</span>
+                                    <span>이메일로 재설정 링크 받기</span>
                                 </button>
                             </div>
                         </div>

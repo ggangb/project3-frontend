@@ -50,7 +50,7 @@ const headers = {
     'x-cors-api-key': 'temp_1827830fbc462df024ee3074f62046cd' //cors 설정 헤더
 }
 const cheerio = require('cheerio'); // 크롤링에 사용/
-const api_url = process.env.VUE_APP_BASE_URL+"/home/newstab";
+const api_url = process.env.VUE_APP_BASE_URL + "/home/newstab";
 export default {
     data() {
         return {
@@ -66,70 +66,56 @@ export default {
     methods: {
         getData(keyword) {  //네이버 뉴스 정보를 받아오는 메소드
             if (keyword == null) {
-                console.log(this.search, this.pageIndex)
                 this.$axios
-                    .get(api_url, { params: { start: this.pageIndex, keyword: "\"해외축구\"" } })
-                    .then((res) => {
-                        this.post = res.data.items;
-                        this.newsData = this.post.map(data => ({ //받아온 데이터의 뉴스 이미지를 위해 img라는 key를 추가
-                            ...data, img: ''
-                        }))
-                        this.request = this.newsData.map((res) => { //이미지를 가져오기 위해 axios로 요청을 보낼 뉴스url 배열을 생성
-                            return this.$axios.get(anywhere + res.link, { headers })
-                        })
-                        this.$axios
-                            .all(this.request) //만들어 놓은 뉴스 url 배열로 요청보내기
-                            .then(
-                                this.$axios.spread((...response) => { //응답에서 meta og : image만 가져와서 이미지 url 삽입
-                                    response.forEach((response, i) => {
-                                        const $ = cheerio.load(response.data);
-                                        const result = $('meta[property=\'og:image\']').attr('content');
-                                        this.newsData[i].img = result;
-                                    });
-                                    const modifiedNews = JSON.stringify(this.newsData).replace(/&quot;/g, '');
-                                    this.newsData = JSON.parse(modifiedNews);
-                                })
-                            )
-                            .catch((error) => {
-                                console.log(error);
-                            })
+                    .get(api_url, { params: { start: this.pageIndex, keyword: "\"해외축구\"" } }) // 네이버 뉴스 API에서 데이터를 가져옵니다
+                    .then(async (res) => { // 데이터를 성공적으로 가져온 경우
+                        this.post = res.data.items; // 가져온 데이터의 아이템을 post 변수에 저장합니다
+                        console.log(res);
+                        this.newsData = this.post.map(data => ({
+                            ...data,
+                            img: ''
+                        })); // 가져온 데이터의 각 아이템에 img라는 키를 추가하여 newsData 배열에 저장합니다
+                        const modifiedNews = JSON.stringify(this.newsData).replace(/&quot;/g, ''); // newsData 배열을 JSON 문자열로 변환하고, 문자열에서 &quot;을 제거합니다
+                        this.newsData = JSON.parse(modifiedNews); // 수정된 JSON 문자열을 다시 객체로 변환하여 newsData에 저장합니다
+
+                        const requests = this.newsData.map(async (data) => { // 각 뉴스 아이템에 대해 비동기적으로 처리하는 요청을 생성합니다
+                            const response = await this.$axios.get(anywhere + data.link, { headers }); // 각 뉴스의 URL로 요청을 보내고 응답을 받습니다
+                            const $ = cheerio.load(response.data); // 응답 데이터를 cheerio를 사용하여 HTML로 파싱합니다
+                            const result = $('meta[property=\'og:image\']').attr('content'); // 파싱된 HTML에서 meta 태그 중 og:image 속성의 값을 추출합니다
+                            data.img = result; // 추출한 이미지 URL을 해당 뉴스 아이템의 img 속성에 저장합니다
+                        });
+
+                        await Promise.all(requests); // 모든 요청이 완료될 때까지 기다립니다
 
                     })
                     .catch((error) => {
-                        console.log(error);
+                        console.log(error); // 오류가 발생한 경우 오류를 출력합니다
                     })
             } else {
-                console.log(this.search, this.pageIndex)
                 this.$axios
-                    .get(api_url, { params: { start: this.pageIndex, keyword: this.search } })
-                    .then((res) => {
-                        this.post = res.data.items;
-                        this.newsData = this.post.map(data => ({ //받아온 데이터의 뉴스 이미지를 위해 img라는 key를 추가
-                            ...data, img: ''
-                        }))
-                        this.request = this.newsData.map((res) => { //이미지를 가져오기 위해 axios로 요청을 보낼 뉴스url 배열을 생성
-                            return this.$axios.get(anywhere + res.link, { headers })
-                        })
-                        this.$axios
-                            .all(this.request) //만들어 놓은 뉴스 url 배열로 요청보내기
-                            .then(
-                                this.$axios.spread((...response) => { //응답에서 meta og : image만 가져와서 이미지 url 삽입
-                                    response.forEach((response, i) => {
-                                        const $ = cheerio.load(response.data);
-                                        const result = $('meta[property=\'og:image\']').attr('content');
-                                        this.newsData[i].img = result;
-                                    });
-                                    const modifiedNews = JSON.stringify(this.newsData).replace(/&quot;/g, '');
-                                    this.newsData = JSON.parse(modifiedNews);
-                                })
-                            )
-                            .catch((error) => {
-                                console.log(error);
-                            })
+                    .get(api_url, { params: { start: this.pageIndex, keyword: this.search } }) // 네이버 뉴스 API에서 데이터를 가져옵니다
+                    .then(async (res) => { // 데이터를 성공적으로 가져온 경우
+                        this.post = res.data.items; // 가져온 데이터의 아이템을 post 변수에 저장합니다
+                        console.log(res);
+                        this.newsData = this.post.map(data => ({
+                            ...data,
+                            img: ''
+                        })); // 가져온 데이터의 각 아이템에 img라는 키를 추가하여 newsData 배열에 저장합니다
+                        const modifiedNews = JSON.stringify(this.newsData).replace(/&quot;/g, ''); // newsData 배열을 JSON 문자열로 변환하고, 문자열에서 &quot;을 제거합니다
+                        this.newsData = JSON.parse(modifiedNews); // 수정된 JSON 문자열을 다시 객체로 변환하여 newsData에 저장합니다
+
+                        const requests = this.newsData.map(async (data) => { // 각 뉴스 아이템에 대해 비동기적으로 처리하는 요청을 생성합니다
+                            const response = await this.$axios.get(anywhere + data.link, { headers }); // 각 뉴스의 URL로 요청을 보내고 응답을 받습니다
+                            const $ = cheerio.load(response.data); // 응답 데이터를 cheerio를 사용하여 HTML로 파싱합니다
+                            const result = $('meta[property=\'og:image\']').attr('content'); // 파싱된 HTML에서 meta 태그 중 og:image 속성의 값을 추출합니다
+                            data.img = result; // 추출한 이미지 URL을 해당 뉴스 아이템의 img 속성에 저장합니다
+                        });
+
+                        await Promise.all(requests); // 모든 요청이 완료될 때까지 기다립니다
 
                     })
                     .catch((error) => {
-                        console.log(error);
+                        console.log(error); // 오류가 발생한 경우 오류를 출력합니다
                     })
             }
 
